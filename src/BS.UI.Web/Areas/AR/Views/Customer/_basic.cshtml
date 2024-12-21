@@ -1,0 +1,113 @@
+﻿@*<div class="row gy-4">*@
+<div class="card-body">
+    <div class="row gy-2 gx-3 align-items-center mb-2">
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+            <label for="code" class="form-label">Code</label>
+            <input type="text" class="form-control" id="code" name="code" placeholder="Code" required>
+        </div>
+        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Title" required>
+        </div>
+    </div>
+    <div class="row gy-2 gx-3 align-items-center mb-2">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name" required>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last name" required>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+            <label for="customerName" class="form-label">Customer Display Name</label>
+            <input type="text" class="form-control" id="customerName" placeholder="Customer Display Name" disabled="" readonly="">
+        </div>
+    </div>
+    <div class="row gy-2 gx-3 align-items-center mb-2">
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+            <label for="gstNo" class="form-label">GST#</label>
+            <input type="text" class="form-control" id="gstNo" name="gstNo" placeholder="GST Number">
+        </div>
+        <div class="col-xl-4 col-lg-2 col-md-2 col-sm-2">
+            <label for="emailAddress" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="emailAddress" name="emailAddress" placeholder="Email@xyz.com" required>
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 choices-control">
+            <label for="currency" class="form-label">Currency</label>
+            <select class="form-select" name="currency" id="currency">
+                <option value="INR">₹ Indian Rupee</option>
+                <option value="USD">₹ US Dollar</option>
+            </select>
+        </div>
+        <div class="row gy-2 gx-3 align-items-center mb-2">
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                <label for="workPhone" class="form-label">Work Phone</label>
+                <input type="tel" class="form-control" id="workPhone" name="workPhone" placeholder="+123-456-7890">
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                <label for="mobilePhone" class="form-label">Mobile Phone</label>
+                <input type="text" class="form-control" id="mobilePhone" name="mobilePhone" placeholder="+91 00000 00000">
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                <label for="whatsappPhone" class="form-label">WhatsApp Number</label>
+                <input type="tel" class="form-control" id="whatsappPhone" name="whatsappPhone" placeholder="+91 00000 00000">
+            </div>
+        </div>
+        <div class="p-1 border-top border-block-top-dashed">
+            <div class="row gy-2 gx-3 align-items-center mb-2">
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                    <label for="sezCustomer" class="form-label d-block">SEZ Customer</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="sezCustomer" id="sezCustomer-yes" checked="checked">
+                        <label class="form-check-label" for="sezCustomer-yes">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="sezCustomer" id="sezCustomer-no">
+                        <label class="form-check-label" for="sezCustomer-no">
+                            No
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                    <label for="msmeCustomer" class="form-label d-block">MSME Customer</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="msmeCustomer" id="msmeCustomer-yes" checked="checked">
+                        <label class="form-check-label" for="msmeCustomer-yes">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="msmeCustomer" id="msmeCustomer-no">
+                        <label class="form-check-label" for="msmeCustomer-no">
+                            No
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                    <label for="panNo" class="form-label">PAN No.</label>
+                    <input type="text" class="form-control" id="panNo" name="panNo" placeholder="PAN">
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 choices-control">
+                    <label for="paymentTerms" class="form-label">Payment Terms</label>
+                    <select class="form-select" name="paymentTerms" id="paymentTerms">
+                        <option value="1">NET 15</option>
+                        <option value="2">NET 30</option>
+                        <option value="3">NET 45</option>
+                        <option value="4">NET 60</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="p-1 border-top border-block-top-dashed">
+            <div class="row gy-2 gx-3 align-items-center mb-2">
+                <div class="col-xl-8">
+                    <label for="remarks" class="form-label">Remarks :</label>
+                    <textarea class="form-control" id="remarks" name="remarks" rows="4"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

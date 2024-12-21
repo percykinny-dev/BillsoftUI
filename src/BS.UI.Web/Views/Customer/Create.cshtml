@@ -1,0 +1,130 @@
+﻿<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-body add-customer p-0">
+                <div class="p-2">
+                    <div class="row gx-5">
+                        <form id="create-customer" action="/your-action" method="post">
+                            <div class="accordion accordion-border-primary accordions-items-seperate" id="create-customer">
+                                @* Basic details start *@
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="basicDetails">
+                                        <button class="accordion-button" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#basic-details"
+                                                aria-expanded="true" aria-controls="basic-details">
+                                            Basic
+                                        </button>
+                                    </h2>
+                                    <div id="basic-details" class="accordion-collapse collapse show"
+                                         aria-labelledby="basicDetails" data-bs-parent="#create-customer">
+                                        <div class="accordion-body">
+                                            <partial name="_basic" />
+                                        </div>
+                                    </div>
+                                </div>
+                                @* Basic details end *@
+
+                                @* Address details start *@
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="addressDetails">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#address-details"
+                                                aria-expanded="false" aria-controls="address-details">
+                                            Address
+                                        </button>
+                                    </h2>
+                                    <div id="address-details" class="accordion-collapse collapse"
+                                         aria-labelledby="addressDetails" data-bs-parent="#create-customer">
+                                        <div class="accordion-body">
+                                            <partial name="_address" />
+                                        </div>
+                                    </div>
+                                </div>
+                                @* Address details end *@
+
+                                @* Customer fields start *@
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="customFields">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#custom-fields"
+                                                aria-expanded="false" aria-controls="custom-fields">
+                                            Custom fields
+                                        </button>
+                                    </h2>
+                                    <div id="custom-fields" class="accordion-collapse collapse"
+                                         aria-labelledby="customFields" data-bs-parent="#create-customer">
+                                        <div class="accordion-body">
+                                            <partial name="_customerFields" />
+                                        </div>
+                                    </div>
+                                </div>
+                                @* Customer fields end *@
+
+                            </div>
+                            <div class="px-4 py-3 border-top border-block-start-dashed d-sm-flex justify-content-end">
+                                <button class="btn btn-primary me-md-2 btn-wave" type="button">Reset</button>
+                                <button id="btn-submit-customer" class="btn btn-primary btn-wave" type="submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .button-container {
+        margin-top: 20px;
+    }
+</style>
+
+@*<script>
+
+    $(document).ready(function () {
+        
+        //alert("Create Customer data: ");
+
+        // for color selection
+        const multipleCancelButton = new Choices(
+            '#billState',
+            {
+                //allowHTML: true
+            }
+        );
+
+        const multipleCancelButton1 = new Choices(
+            '#brand',
+            {
+                //allowHTML: true,
+               // removeItemButton: true,
+            }
+        );
+    });
+
+    function () {
+        "use strict"
+
+        // for color selection
+        const multipleCancelButton = new Choices(
+            '#billState',
+            {
+                allowHTML: true,
+                removeItemButton: true,
+            }
+        );
+
+        // for product tags
+        const multipleCancelButton1 = new Choices(
+            '#product-tags',
+            {
+                allowHTML: true,
+                removeItemButton: true,
+            }
+        );
+</script>*@
+
+@section Scripts{
+    <script src="~/bs/js/ar_customer.js" asp-append-version="true"></script>
+}

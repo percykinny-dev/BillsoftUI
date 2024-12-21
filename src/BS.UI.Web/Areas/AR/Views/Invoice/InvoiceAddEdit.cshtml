@@ -1,0 +1,336 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Dictionary<string, string> data = ViewBag.Resources;
+    //var pageTitle = data[ResourceKeyEnum.AR_CUSTOMER_CREATE_PAGETITLE.ToString()];
+    //ViewBag.Title = pageTitle;
+
+    ViewBag.Title = ViewBag.Resources["AR_INVOICE_CREATE_PAGETITLE"];
+
+    //Check if ViewBag.Resources is not null and contains the required key
+    //if (ViewBag.Resources != null && ViewBag.Resources.ContainsKey(ResourceKeyEnum.AR_CUSTOMER_CREATE_PAGETITLE))
+    //{
+    //    ViewBag.Title = ViewBag.Resources[ResourceKeyEnum.AR_CUSTOMER_CREATE_PAGETITLE.ToString()];
+    //}
+    //else
+    //{
+    //    // Set a default title if the key is not found
+    //    ViewBag.Title = "Default Page Title";
+    //}
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="d-md-flex d-block align-items-center justify-content-between my-2 page-header-breadcrumb">
+    <h1 class="page-title fw-semibold fs-18 mb-0">@ViewBag.Title</h1>
+    @*<div class="ms-md-1 ms-0">
+    <nav>
+    <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+    </ol>
+    </nav>
+    </div>*@
+</div>
+<!-- Page Header Close -->
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-body add-invoice p-0">
+                <div class="p-2">
+                    <div class="row gx-5">
+                        <form id="frmInvoice" name="frmInvoice" class="needs-validation" action="" method="post" novalidate>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="card custom-card">
+                                        <div class="card-header d-flex justify-content-between w-100">
+                                            <div class="col-xl-6 col-lg-4 col-md-4">
+                                                <select class="form-control" data-trigger name="customerID" id="customerID">
+                                                    <option value="">Select Customer</option>
+                                                    <option value="1">Anamotized Med-tech Pvt Ltd</option>
+                                                    <option value="2">Bhakti Stationary & Prints</option>
+                                                    <option value="3">India Connection Impex Pvt Ltd</option>
+                                                    <option value="4">VGA International</option>
+                                                </select>
+
+                                            </div>
+                                            <div class="ml-auto ms-2">
+                                                <button class="btn btn-sm btn-primary">Save As PDF<i class="ri-file-pdf-line align-middle d-inline-block"></i></button>
+                                                <button class="btn btn-sm btn-icon btn-secondary-light"><i class="bi bi-printer-fill"></i></button>
+                                                <button class="btn btn-sm btn-icon btn-success-light"><i class="bi bi-download"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="card custom-card">
+                                            <div class="row gy-3">
+                                                <div class="col-xl-12">
+                                                    <div class="row hidden-element" id="addressRow">
+                                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                                                            <p class="form-label mb-2 mt-2">
+                                                                Billing Address :
+                                                                <button type="button" class="btn btn-sm btn-icon btn-primary-light" onclick="ShowAddressList();"><i class="bi bi-card-list" title="choose an address"></i></button>
+                                                            </p>
+                                                            <div class="row gy-2">
+                                                                <div class="col-xl-12">
+                                                                    <input type="text" class="form-control form-control-light" id="billCompanyName" name="billCompanyName" placeholder="Company Name" value="SPRUKO TECHNOLOGIES">
+                                                                </div>
+                                                                <div class="col-xl-12">
+                                                                    <textarea class="form-control form-control-light" id="billAddress" name="billAddress" placeholder="Enter Address" rows="3"></textarea>
+                                                                </div>
+                                                                <div class="col-xl-12">
+                                                                    <input type="text" class="form-control form-control-light" id="billEmailAddress" name="billEmailAddress" placeholder="Company Email" value="">
+                                                                </div>
+                                                                <div class="col-xl-12">
+                                                                    <input type="text" class="form-control form-control-light" id="billPhone" name="billPhone" placeholder="Phone Number" value="">
+                                                                </div>
+                                                                <div class="col-xl-12">
+                                                                    <input type="text" class="form-control form-control-light" id="billZipcode" name="billZipcode" placeholder="Zip Code" value="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 ms-auto mt-sm-0 mt-3">
+                                                            <p class="form-label mb-2 mt-2">
+                                                                Shipping Address :
+                                                                <button class="btn btn-sm btn-icon btn-primary-light"><i class="bi bi-card-list" title="choose an address"></i></button>
+                                                            </p>
+                                                            <div class="row gy-2">
+                                                                <div class="col-xl-12">
+                                                                    <input type="text" class="form-control form-control-light" id="shipCompanyName" name="shipCompanyName" placeholder="Invoice Name" value="Json Taylor">
+                                                                </div>
+                                                                <div class="col-xl-12">
+                                                                    <textarea class="form-control form-control-light" id="shipAddress" name="shipAddress" placeholder="Enter Address" rows="3"></textarea>
+                                                                </div>
+                                                                <div class="col-xl-12">
+                                                                    <input type="text" class="form-control form-control-light" id="shipEmailAddress" name="shipEmailAddress" placeholder="Invoice Email" value="">
+                                                                </div>
+                                                                <div class="col-xl-12">
+                                                                    <input type="text" class="form-control form-control-light" id="shipPhone" name="shipPhone" placeholder="Phone Number" value="">
+                                                                </div>
+                                                                <div class="col-xl-12">
+                                                                    <input type="text" class="form-control form-control-light" id="shipZipcode" name="shipZipcode" placeholder="Zip Code" value="">
+                                                                </div>
+                                                                <div class="col-xl-12 choices-control">
+                                                                    <p class="dw-semibold mb-2 mt-2">
+                                                                        Currency :
+                                                                    </p>
+                                                                    <select class="form-control" data-trigger name="invoice-currency" id="invoice-currency">
+                                                                        <option value="">Select Currency</option>
+                                                                        <option value="USD">USD - (United States Dollar)</option>
+                                                                        <option value="INR">₹ - (Indian Ruppee)</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3">
+                                                    <div class="row">
+                                                        <div class="col-xl-8">
+                                                            <label for="invoiceNo" class="form-label">Invoice No.</label>
+                                                            <input type="text" class="form-control" id="invoiceNo" name="invoiceNo" placeholder="Invoice No." value="022/23-24">
+                                                        </div>
+                                                        <div class="col-xl-4">
+                                                            <label for="finYear" class="form-label">Fin Year</label>
+                                                            <input type="text" class="form-control form-control-light" id="finYear" name="finYear" value="2023-24" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3">
+                                                    <label for="invoice-date-issued" class="form-label">Invoice Date</label>
+                                                    <input type="text" class="form-control form-control-light" id="issuedDate" name="issuedDate" placeholder="Choose date">
+                                                </div>
+                                                <div class="col-xl-3">
+                                                    <label for="invoice-date-due" class="form-label">Due Date</label>
+                                                    <input type="text" class="form-control form-control-light" id="dueDate" name="dueDate" placeholder="Choose date">
+                                                </div>
+                                                <div class="col-xl-3">
+                                                    <label for="invoice-due-amount" class="form-label">Due Amount</label>
+                                                    <input type="text" class="form-control form-control-light" id="dueAmount" name="dueAmount" placeholder="Enter Amount" value="$12,983.78">
+                                                </div>
+                                                <div class="col-xl-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table nowrap text-nowrap border mt-3">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ITEM / PRODUCT NAME</th>
+                                                                    <th>QUANTITY</th>
+                                                                    <th>PRICE PER UNIT</th>
+                                                                    <th>TAX</th>
+                                                                    <th>TOTAL</th>
+                                                                    <th>ACTION</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="invoiceTableBody">
+                                                                <tr id="itemRow1">
+                                                                    <td>
+                                                                        <select class="form-control" data-trigger id="itemId1" name="itemId1">
+                                                                            <option value="">Select Product</option>
+                                                                            <option value="48">Box Printing - 4911</option>
+                                                                            <option value="51">A/5 PAMPHLET PRINT- 8443</option>
+                                                                            <option value="191">SMART CARD PRINT - 8443</option>
+                                                                            <option value="123">C.S PLOTTER - 480255</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td class="invoice-quantity-container">
+                                                                        <div class="input-group border rounded flex-nowrap">
+                                                                            <button type="button" class="btn btn-icon btn-primary input-group-text flex-fill product-quantity-minus" onclick="changeQty(this,0);"><i class="ri-subtract-line"></i></button>
+                                                                            <input type="text" class="form-control form-control-sm border-0 text-center w-100" aria-label="quantity" id="qty1" name="qty1" value="1">
+                                                                            <button type="button" class="btn btn-icon btn-primary input-group-text flex-fill product-quantity-plus" onclick="changeQty(this,1);"><i class="ri-add-line"></i></button>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><input class="form-control form-control-light" id="price1" type="text" value="₹60.00"></td>
+                                                                    <td><input class="form-control form-control-light" id="tax1" type="text" value="18%"></td>
+                                                                    <td><input class="form-control form-control-light" id="total1" type="text" value="₹120.00"></td>
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-sm btn-icon btn-danger-light"><i class="ri-delete-bin-5-line"></i></button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <table class="table nowrap text-nowrap mt-1">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td colspan="6"><button type="button" id="addInvDetailRow" name="addInvDetailRow" class="btn btn-primary input-group-text flex-fill"><i class="bi bi-plus-lg"></i> &nbsp;Add Product</button></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="4" class="col-7">
+                                                                        <div class="mb-5 pb-5">
+                                                                            <label for="invoice-note" class="form-label">Note:</label>
+                                                                            <textarea class="form-control form-control-light" id="invoice-note" rows="8">Once the invoice has been verified by the accounts payable team and recorded, the only task left is to send it for approval before releasing the payment</textarea>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td colspan="2" class="float-end">
+                                                                        <table class="table table-sm text-nowrap mb-0 table-borderless">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <th scope="row">
+                                                                                        <div class="fw-semibold">Sub Total :</div>
+                                                                                    </th>
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control form-control-light invoice-amount-input" placeholder="Enter Amount" value="$1209.89">
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th scope="row">
+                                                                                        <div class="fw-semibold">Discount :</div>
+                                                                                    </th>
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control form-control-light invoice-amount-input" placeholder="Enter Amount" value="$29.98">
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th scope="row">
+                                                                                        <div class="fw-semibold">CGST :</div>
+                                                                                    </th>
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control form-control-light invoice-amount-input" value="₹129.00">
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th scope="row">
+                                                                                        <div class="fw-semibold">SSGT :</div>
+                                                                                    </th>
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control form-control-light invoice-amount-input" value="₹129.00">
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th scope="row">
+                                                                                        <div class="fs-14 fw-semibold">Total :</div>
+                                                                                    </th>
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control form-control-light invoice-amount-input" placeholder="Enter Amount" value="$1,071.89">
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-end">
+                                            @*<button class="btn btn-light me-1"><i class="ri-eye-line me-1 align-middle d-inline-block"></i>Preview</button>*@
+                                            <button class="btn btn-primary">Save Invoice <i class="ri-send-plane-2-line ms-1 align-middle d-inline-block"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="addressModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addressTitle">Billing Addresses:</h5>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="addressListContainer">
+                <div class="list-group">
+                </div>
+
+                @*<div class="list-group">
+                <label class="list-group-item">
+                <input class="form-check-input me-1" type="radio" value=""
+                name="list-radio" checked>
+                Accurate information at any given point.
+                </label>
+                <label class="list-group-item">
+                <input class="form-check-input me-1" type="radio" value=""
+                name="list-radio" checked>
+                Hearing the information and responding.
+                </label>
+                <label class="list-group-item">
+                <input class="form-check-input me-1" type="radio" value=""
+                name="list-radio" checked>
+                Setting up and customizing your own sales.
+                </label>
+                <label class="list-group-item">
+                <input class="form-check-input me-1" type="radio" value=""
+                name="list-radio">
+                New Admin Launched.
+                </label>
+                <label class="list-group-item">
+                <input class="form-check-input me-1" type="radio" value=""
+                name="list-radio">
+                To maximize profits and improve productivity.
+                </label>
+                <label class="list-group-item">
+                <input class="form-check-input me-1" type="radio" value=""
+                name="list-radio">
+                To have a complete 360° overview of sales information, having.
+                </label>
+                </div>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="selectAddressNo" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="selectAddressYes" class="btn btn-success">Ok</button>
+                <input type="hidden" id="selBillAddressId" value="0" />
+                <input type="hidden" id="selShipAddressId" value="0" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .button-container {
+        margin-top: 20px;
+    }
+</style>
+
+
+
+@section Scripts{
+    <script src="~/bs/js/ar_invoice.js" asp-append-version="true"></script>
+}

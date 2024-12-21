@@ -1,0 +1,711 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model BS.Application.ViewModels.AR.ARCustomerDetailVM
+@{
+    var customer = Model.Customer;
+    var billingAddress = Model.BillingAddresses;
+    var shippingAddress = Model.ShippingAddresses;
+    var notes = Model.Notes;
+
+    //Dictionary<string, string> data = ViewBag.Resources;
+    //var pageTitle = data[ResourceKeyEnum.AR_CUSTOMER_INDEX_PAGETITLE.ToString()];
+    //ViewBag.Title = pageTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="d-md-flex d-block align-items-center justify-content-between my-2 page-header-breadcrumb">
+    <h1 class="page-title fw-semibold fs-18 mb-0">@ViewBag.Title</h1>
+</div>
+<!-- Page Header Close -->
+<!-- Start::row-1 -->
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-body p-0">
+                <div class="p-3 border-bottom border-block-end-dashed d-flex align-items-center justify-content-between">
+                    <div>
+                        <ul class="nav nav-tabs mb-0 tab-style-6 justify-content-start" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="activity-tab" data-bs-toggle="tab"
+                                        data-bs-target="#activity-tab-pane" type="button" role="tab"
+                                        aria-controls="activity-tab-pane" aria-selected="true">
+                                    <i class="ri-gift-line me-1 align-middle d-inline-block"></i>Summary
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="posts-tab" data-bs-toggle="tab"
+                                        data-bs-target="#posts-tab-pane" type="button" role="tab"
+                                        aria-controls="posts-tab-pane" aria-selected="false">
+                                    <i class="ri-bill-line me-1 align-middle d-inline-block"></i>Transactions
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="fw-semibold mb-2">Profile 60% completed - <a href="javscript:void(0);" class="text-primary fs-12">Finish now</a></p>
+                        <div class="progress progress-xs progress-animate">
+                            <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3">
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane show active fade p-0 border-0" id="activity-tab-pane"
+                             role="tabpanel" aria-labelledby="activity-tab" tabindex="0">
+                            <div class="row">
+                                <div class="col-xxl-3 col-xl-3">
+                                    <div class="card custom-card overflow-auto">
+                                        <div class="card-body p-0">
+                                            <div class="d-sm-flex align-items-top p-4 border-bottom border-block-end-dashed">
+                                                @* <div>
+                                                <span class="avatar avatar-xxl avatar-rounded online me-1">
+                                                <img src="~/bs/images/faces/9.jpg" alt="">
+                                                </span>
+                                                </div>*@
+                                                <div class="flex-fill">
+                                                    <div class="d-flex align-items-center justify-content-between">
+                                                        <h6 class="fw-semibold mb-1" id="lblTitle"> @customer.Title (@customer.Code)</h6>
+                                                        <button type="button" class="btn btn-icon btn-wave btn-primary btn-sm" id="editCustomerBasic" name="editCustomerBasic" onclick="ShowEditCustomerBasic(@customer.ID);"><i class="ri-pencil-line"></i></button>
+                                                    </div>
+                                                    <p class="mb-1 text-muted op-7" id="lblName">@customer.Name</p>
+                                                    <p class="fs-12 mb-4 op-5">
+                                                        <span class="me-3" id="lblEmailAddress"><i class="ri-email-line me-1 align-middle"></i>@customer.EmailAddress</span>
+                                                        <span id="lblAddress"><i class="ri-map-pin-line me-1 align-middle"></i>@customer.BillState, @customer.BillCity</span>
+                                                        <span id="lblMobilePhone"><i class="ri-phone-line me-1 align-middle"></i>@customer.MobilePhone</span>
+                                                    </p>
+                                                    <div class="d-flex mb-0">
+                                                        <div class="me-4">
+                                                            <p class="fw-bold fs-20 text-shadow mb-0">113</p>
+                                                            <p class="mb-0 fs-11 op-5">Invoices</p>
+                                                        </div>
+                                                        <div class="me-4">
+                                                            <p class="fw-bold fs-20 text-shadow mb-0">12.2k</p>
+                                                            <p class="mb-0 fs-11 op-5">Payments</p>
+                                                        </div>
+                                                        <div class="me-4">
+                                                            <p class="fw-bold fs-20 text-shadow mb-0">128</p>
+                                                            <p class="mb-0 fs-11 op-5 ">Quotes</p>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="p-2 border-bottom border-block-end-dashed">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <span class="fw-semibold p-2">Billing Address :</span>
+                                                    <button type="button" class="btn btn-normal btn-icon btn-secondary btn-sm" onclick="AddNewCustomerAddress(1,@customer.ID,0,'addressItem_0')"><i class="ri-add-line"></i></button>
+                                                </div>
+                                                <div id="divBillingAddress">
+                                                    <ul id="lstBillingAddress" class="list-group list-group-flush">
+                                                        @foreach (var address in billingAddress)
+                                                        {
+                                                            <li id="addressItem_@address.AddressID" class="list-group-item fw-semibold">
+                                                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                                                    <span class="fw-semibold">@address.ContactName</span>
+                                                                    <div>
+                                                                        @{
+                                                                            if (!(address.IsDefault ?? false))
+                                                                            {
+                                                                                <button type="button" class="btn btn-success btn-sm shadow-sm btn-wave" onclick="SetDefaultCustomerAddress(@address.CustomerID,@address.AddressID,1);">Default</button>
+                                                                                <button type="button" class="btn btn-danger btn-icon btn-primary btn-sm" onclick="ShowDeleteCustomerAddress(@address.CustomerID,@address.AddressID);"><i class="ri-delete-bin-line"></i></button>
+                                                                            }
+                                                                        }
+                                                                        <button type="button" class="btn btn-icon btn-wave btn-primary btn-sm" onclick="ShowEditCustomerAddress(@customer.ID,@address.AddressID, 'addressItem_@address.AddressID');"><i class="ri-pencil-line"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                                <p class="mb-1 text-muted fs-14">@address.Address1</p>
+                                                                <p class="mb-1 text-muted fs-14">@address.Address2</p>
+                                                                <p class="mb-1 text-muted fs-14">@address.City, @address.State @address.Zipcode  </p>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="p-2 border-bottom border-block-end-dashed">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <span class="fw-semibold p-2">Shipping Address :</span>
+                                                    <button type="button" class="btn btn-normal btn-icon btn-secondary btn-sm" onclick="AddNewCustomerAddress(2,@customer.ID,0,'addressItem_0')"><i class="ri-add-line"></i></button>
+                                                </div>
+                                                <div id="divShippingAddress">
+                                                    <ul id="lstShippingAddress" class="list-group list-group-flush">
+                                                        @foreach (var address in shippingAddress)
+                                                        {
+                                                            <li id="addressItem_@address.AddressID" class="list-group-item fw-semibold">
+                                                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                                                    <span class="fw-semibold">@address.ContactName</span>
+                                                                    <div>
+                                                                        @{
+                                                                            if (!(address.IsDefault ?? false))
+                                                                            {
+                                                                                <button type="button" class="btn btn-success btn-sm shadow-sm btn-wave" onclick="SetDefaultCustomerAddress(@address.CustomerID,@address.AddressID,2);">Default</button>
+                                                                                <button type="button" class="btn btn-danger btn-icon btn-primary btn-sm" onclick="ShowDeleteCustomerAddress(@address.CustomerID,@address.AddressID)" ;><i class="ri-delete-bin-line"></i></button>
+                                                                            }
+                                                                        }
+                                                                        <button type="button" class="btn btn-icon btn-wave btn-primary btn-sm" onclick="ShowEditCustomerAddress(@customer.ID,@address.AddressID, 'addressItem_@address.AddressID');"><i class="ri-pencil-line"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                                <p class="mb-1 text-muted fs-14">@address.Address1</p>
+                                                                <p class="mb-1 text-muted fs-14">@address.Address2</p>
+                                                                <p class="mb-1 text-muted fs-14">@address.City, @address.State @address.Zipcode  </p>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="p-3 border-bottom border-block-end-dashed">
+                                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                                    <span class="fw-semibold">Other Details :</span>
+                                                </div>
+                                                <p class="mb-2 text-muted fs-14"><span class="fw-semibold text-default">GST No : </span><span id="lblGSTNo">@customer.GSTNo</span></p>
+                                                <p class="mb-2 text-muted fs-14"><span class="fw-semibold text-default">Pan No : </span><span id="lblPanNo">@customer.PanNo</span></p>
+                                                <p class="mb-2 text-muted fs-14"><span class="fw-semibold text-default">Sez Customer : </span><span id="lblSEZCustomer">@customer.SEZCustomer</span></p>
+                                                <p class="mb-2 text-muted fs-14"><span class="fw-semibold text-default">MSME Customer : </span><span id="lblMSMECustomer">@customer.MSMECustomer</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xxl-9 col-xl-9">
+                                    <ul class="list-unstyled profile-timeline">
+                                        @foreach (var note in notes)
+                                        {
+                                            <li>
+                                                <div>
+                                                    <span class="avatar avatar-sm bg-primary-transparent avatar-rounded profile-timeline-avatar">
+                                                        E
+                                                    </span>
+                                                    <p class="text-muted mb-2">
+                                                        <span class="text-default"><b>@note.EventType</b></span>.<span class="float-end fs-14">@note.CreatedDate.ToLongDateString() @note.CreatedDate.ToShortTimeString() </span>
+                                                    </p>
+                                                    <p class="text-muted mb-0">
+                                                        @note.EventDescription <span class="float-end fs-14">by <b>@note.User.FirstName @note.User.LastName </b>  </span>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade p-0 border-0" id="posts-tab-pane"
+                             role="tabpanel" aria-labelledby="posts-tab" tabindex="0">
+                            <div class="accordion accordion-border-primary accordions-items-seperate" id="create-customer">
+                                @* Basic details start *@
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="custInvoices">
+                                        <button class="accordion-button" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#cust-invoices"
+                                                aria-expanded="true" aria-controls="cust-invoices">
+                                            Invoices
+                                        </button>
+                                    </h2>
+                                    <div id="cust-invoices" class="accordion-collapse collapse show"
+                                         aria-labelledby="custInvoices" data-bs-parent="#custInvoices">
+                                        <div class="accordion-body">
+                                            <div class="row">
+                                                <div class="col-xl-12">
+                                                    <div class="card custom-card">
+                                                        <div class="card-header justify-content-between">
+                                                            <div class="card-title">
+                                                                Open Invoices
+                                                            </div>
+                                                            <div class="d-flex">
+                                                                <button class="btn btn-sm btn-primary btn-wave waves-light" data-bs-toggle="modal" data-bs-target="#create-invoice"><i class="ri-add-line fw-semibold align-middle me-1"></i> Create invoice</button>
+                                                                <!-- Start::add invoice modal -->
+                                                                <div class="modal fade" id="create-invoice" tabindex="-1" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h6 class="modal-title">Add invoice</h6>
+                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                                        aria-label="Close"></button>
+                                                                            </div>
+                                                                            <div class="modal-body px-4">
+                                                                                <div class="row gy-2">
+                                                                                    <div class="col-xl-6">
+                                                                                        <label for="invoice-name" class="form-label">invoice Name</label>
+                                                                                        <input type="text" class="form-control" id="invoice-name" placeholder="invoice Name">
+                                                                                    </div>
+                                                                                    <div class="col-xl-6">
+                                                                                        <label for="invoice-id" class="form-label">invoice ID</label>
+                                                                                        <input type="text" class="form-control" id="invoice-id" placeholder="invoice ID">
+                                                                                    </div>
+                                                                                    <div class="col-xl-6">
+                                                                                        <label class="form-label">Assigned Date</label>
+                                                                                        <div class="form-group">
+                                                                                            <div class="input-group">
+                                                                                                <div class="input-group-text text-muted"> <i class="ri-calendar-line"></i> </div>
+                                                                                                <input type="text" class="form-control" id="assignedDate" placeholder="Choose date and time">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-xl-6">
+                                                                                        <label class="form-label">Due Date</label>
+                                                                                        <div class="form-group">
+                                                                                            <div class="input-group">
+                                                                                                <div class="input-group-text text-muted"> <i class="ri-calendar-line"></i> </div>
+                                                                                                <input type="text" class="form-control" id="dueDate" placeholder="Choose date and time">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-xl-6">
+                                                                                        <label class="form-label">Status</label>
+                                                                                        <select class="form-control" data-trigger name="choices-single-default" id="choices-single-default">
+                                                                                            <option value="New">New</option>
+                                                                                            <option value="Completed">Completed</option>
+                                                                                            <option value="Inprogress">Inprogress</option>
+                                                                                            <option value="Pending">Pending</option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <div class="col-xl-6">
+                                                                                        <label class="form-label">Priority</label>
+                                                                                        <select class="form-control" data-trigger name="choices-single-default" id="choices-single-default1">
+                                                                                            <option value="High">High</option>
+                                                                                            <option value="Medium">Medium</option>
+                                                                                            <option value="Low">Low</option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <div class="col-xl-12">
+                                                                                        <label class="form-label">Assigned To</label>
+                                                                                        <select class="form-control" name="choices-multiple-remove-button1" id="choices-multiple-remove-button1" multiple>
+                                                                                            <option value="Choice 1">Angelina May</option>
+                                                                                            <option value="Choice 2">Kiara advain</option>
+                                                                                            <option value="Choice 3">Hercules Jhon</option>
+                                                                                            <option value="Choice 4">Mayor Kim</option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-light"
+                                                                                        data-bs-dismiss="modal">
+                                                                                    Cancel
+                                                                                </button>
+                                                                                <button type="button" class="btn btn-primary">Add invoice</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- End::add invoice modal -->
+                                                                <div class="dropdown ms-2">
+                                                                    <button class="btn btn-icon btn-secondary-light btn-sm btn-wave waves-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                        <i class="ti ti-dots-vertical"></i>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                        <li><a class="dropdown-item" href="#">New invoices</a></li>
+                                                                        <li><a class="dropdown-item" href="#">Pending invoices</a></li>
+                                                                        <li><a class="dropdown-item" href="#">Completed invoices</a></li>
+                                                                        <li><a class="dropdown-item" href="#">Inprogress invoices</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="table-responsive">
+                                                                <table class="table text-nowrap table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>
+                                                                                <input class="form-check-input check-all" type="checkbox" id="all-invoices" value="" aria-label="...">
+                                                                            </th>
+                                                                            <th scope="col">Invoice Title</th>
+                                                                            <th scope="col">Invoice#</th>
+                                                                            <th scope="col">Invoice Date</th>
+                                                                            <th scope="col">Status</th>
+                                                                            <th scope="col">Due Date</th>
+                                                                            <th scope="col">Priority</th>
+                                                                            <th scope="col">Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr class="invoice-list">
+                                                                            <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..."></td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">Design New Landing Page</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">SPK - 01</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                02-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold text-primary">New</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                10-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="badge bg-secondary-transparent">Medium</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
+                                                                                <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="invoice-list">
+                                                                            <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..." checked></td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">New Project Buleprint</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">SPK - 04</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                05-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold text-secondary">Inprogress</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                15-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="badge bg-danger-transparent">High</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
+                                                                                <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="invoice-list">
+                                                                            <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..."></td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">Server Side Validation</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">SPK - 11</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                12-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold text-warning">Pending</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                16-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="badge bg-success-transparent">Low</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
+                                                                                <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="invoice-list">
+                                                                            <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..."></td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">New Plugin Development</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">SPK - 24</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                08-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold text-success">Completed</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                17-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="badge bg-success-transparent">Low</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
+                                                                                <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="invoice-list">
+                                                                            <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..." checked></td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">Designing New Authentication Page</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">SPK - 16</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                03-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold text-secondary">Inprogress</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                08-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="badge bg-secondary-transparent">Medium</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
+                                                                                <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="invoice-list">
+                                                                            <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..." checked></td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">Documentation For New Template</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">SPK - 07</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                12-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold text-primary">New</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                25-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="badge bg-danger-transparent">High</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
+                                                                                <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="invoice-list">
+                                                                            <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..."></td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">Updating Old UI</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold">SPK - 13</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                06-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="fw-semibold text-success">Completed</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                12-06-2023
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="badge bg-success-transparent">Low</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
+                                                                                <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <nav aria-label="Page navigation">
+                                                                <ul class="pagination mb-0 float-end">
+                                                                    <li class="page-item disabled">
+                                                                        <a class="page-link">Previous</a>
+                                                                    </li>
+                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                                                    <li class="page-item active" aria-current="page">
+                                                                        <a class="page-link" href="#">2</a>
+                                                                    </li>
+                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="#">Next</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </nav>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @* Basic details end *@
+
+                                @* Address details start *@
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="custPayments">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#cust-payments"
+                                                aria-expanded="false" aria-controls="cust-payments">
+                                            Payments
+                                        </button>
+                                    </h2>
+                                    <div id="cust-payments" class="accordion-collapse collapse"
+                                         aria-labelledby="addressDetails" data-bs-parent="#custInvoices">
+                                        <div class="accordion-body">
+                                            <partial name="_address" />
+                                        </div>
+                                    </div>
+                                </div>
+                                @* Address details end *@
+
+                                @* Customer fields start *@
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="custQuotes">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#custom-quotes"
+                                                aria-expanded="false" aria-controls="custom-quotes">
+                                            Quotes
+                                        </button>
+                                    </h2>
+                                    <div id="custom-quotes" class="accordion-collapse collapse"
+                                         aria-labelledby="customQuotes" data-bs-parent="#custInvoices">
+                                        <div class="accordion-body">
+                                            <partial name="_customerFields" />
+                                        </div>
+                                    </div>
+                                </div>
+                                @* Customer fields end *@
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End::row-1 -->
+
+<div class="modal" id="customerBasicModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addressTitle">Customer Basic Details:</h5>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="customerBasicContainer">
+                <form id="frmCustomerBasic" name="frmCustomerBasic" action="" method="post">
+                    <partial name="_basic" />
+                    <input type="hidden" id="customerId" name="customerId" value="" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveCustomerBasicNo" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="saveCustomerBasicYes" class="btn btn-success" onclick="UpdateCustomerBasic();">Save</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal" id="customerAddressModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addressTitle">Customer Address</h5>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="customerAddressContainer">
+                <form id="frmCustomerAddress" name="frmCustomerAddress" action="" method="post">
+                    <div class="card-body">
+                        <div class="row gy-3">
+                            <div class="col-xl-12">
+                                <label for="contactName" class="form-label">Contact Name</label>
+                                <input type="text" class="form-control" id="contactName" name="contactName" placeholder="Contact Name 1111">
+                            </div>
+                            <div class="col-xl-12">
+                                <label for="address1" class="form-label">Address Line #1</label>
+                                <input type="text" class="form-control" id="address1" name="address1" placeholder="Address Line #1">
+                            </div>
+                            <div class="col-xl-12">
+                                <label for="address2" class="form-label">Address Line#2</label>
+                                <input type="text" class="form-control" id="address2" name="address2" placeholder="Address Line #2">
+                            </div>
+                            <div class="col-xl-6">
+                                <label for="city" class="form-label">City</label>
+                                <input type="text" class="form-control" id="city" name="city" placeholder="City">
+                            </div>
+                            <div class="col-xl-6">
+                                <label for="custstate" class="form-label">State</label>
+                                <select class="form-control" name="state" id="state" single>
+                                    <option value="">Select</option>
+                                    <option value="AP">Andhra Pradesh</option>
+                                    <option value="BR">Bihar</option>
+                                    <option value='MP'>Madhya Pradesh</option>
+                                    <option value='MH'>Maharashtra</option>
+                                    <option value="MN">Manipur</option>
+                                </select>
+                            </div>
+                            <div class="col-xl-12">
+                                <div class="row gy-2">
+                                    <div class="col-xl-6">
+                                        <label for="zipcode" class="form-label">ZipCode</label>
+                                        <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="ZipCode">
+                                    </div>
+                                    <div class="col-xl-6">
+                                        <label for="contactEmail" class="form-label">Contact Email Address</label>
+                                        <input type="text" class="form-control" id="contactEmail" name="contactEmail" placeholder="contact email address">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <label for="contactWorkPhone" class="form-label">Work Phone</label>
+                                <input type="tel" class="form-control" id="contactWorkPhone" name="contactWorkPhone" placeholder="+123-456-7890">
+                            </div>
+                            <div class="col-xl-6">
+                                <label for="contactWhatsappPhone" class="form-label">WhatsApp Phone</label>
+                                <input type="tel" class="form-control" id="contactWhatsappPhone" name="contactWhatsappPhone" placeholder="+123-456-7890">
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="customerId" name="customerId" value="" />
+                    <input type="hidden" id="customerAddressId" name="customerAddressId" value="" />
+                    <input type="hidden" id="addressType" name="addressType" value="" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveCustomerAddressNo" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="saveCustomerAddressYes" class="btn btn-success" onclick="UpdateCustomerAddress();">Save</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal" id="delcustomerAddressModal" tabindex="-1" role="dialog" aria-labelledby="delete-custmeraddress-modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Remove the Address?</h5>
+                <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Do you wish to delete this record?<br />Once deleted this action cannot be undone.</p>
+            </div>
+            <div class="modal-footer text-right">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal" id="delCustomerAddressNo" name="delCustomerAddressNo">Cancel</button>
+                <button type="button" class="btn btn-danger" id="delCustomerAddressYes" name="delCustomerAddressYes">Delete</button>
+                <input type="hidden" id="delCustomerId" value="0" />
+                <input type="hidden" id="delCustomerAddressId" value="0" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .button-container {
+        margin-top: 20px;
+    }
+
+    .list-card-header {
+        padding: 0.75rem 0.75rem 0.75rem 0.75rem;
+        margin-bottom: 0;
+        background-color: white !important;
+        border-bottom: 1px solid rgb(255 255 255);
+        display: block;
+    }
+</style>
+
+
+@section Scripts{
+    <script src="~/bs/js/ar_customer.js" asp-append-version="true"></script>
+}
+
+

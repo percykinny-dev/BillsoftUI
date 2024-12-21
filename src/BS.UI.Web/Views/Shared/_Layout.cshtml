@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="light"
+      data-menu-styles="dark" loader="enable">
+<head>
+    <!-- Meta Data -->
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title> BILLSOFT </title>
+    <meta name="Description" content="BILLSOFT">
+    <meta name="Author" content="BILLSOFT">
+    <meta name="keywords" content="BILLSOFT">
+
+    <!-- Favicon -->
+    <link rel="icon" href="~/bs/images/brand-logos/favicon.ico" type="image/x-icon">
+    <link href="~/bs/libs/choices.js/public/assets/styles/choices.min.css" rel="stylesheet" />
+    <!-- Choices JS -->
+    <script src="~/bs/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+    <!-- Main Theme Js -->
+    <script src="~/bs/js/main.js"></script>
+    <!-- Bootstrap Css -->
+    <link id="style" href="~/bs/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Style Css -->
+    <link href="~/bs/css/styles.min.css" rel="stylesheet">
+      <!-- Icons Css -->
+    <link href="~/bs/css/icons.css" rel="stylesheet">
+    <!-- toaster Css -->
+    <link href="~/bs/css/toastr.min.css" rel="stylesheet">
+    @*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.5.2/animate.min.css">*@
+
+    <!-- Node Waves Css -->
+    <link href="~/bs/libs/node-waves/waves.min.css" rel="stylesheet">
+    <!-- Simplebar Css -->
+    <link href="~/bs/libs/simplebar/simplebar.min.css" rel="stylesheet">
+    <!-- Color Picker Css -->
+    <link rel="stylesheet" href="~/bs/libs/flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" href="~/bs/libs/@@simonwep/pickr/themes/nano.min.css">
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.0/css/dataTables.bootstrap5.css">
+
+  @*  <link rel="stylesheet" href="https://unpkg.com/simplebar@5.3.3/dist/simplebar.min.css" />*@
+
+ 
+  
+    <!-- Choices Css -->
+    @*<link rel="stylesheet" href="~/assets/libs/choices.js/public/assets/styles/choices.min.css">*@
+    @*<link rel="stylesheet" href="~/assets/libs/jsvectormap/css/jsvectormap.min.css">
+    <link rel="stylesheet" href="~/assets/libs/swiper/swiper-bundle.min.css">*@
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+   
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.0.0/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.0/js/dataTables.bootstrap5.js"></script>
+    @*<script src="~/bs/libs/simplebar/simplebar.min.js"></script>
+    <script src="~/bs/libs/simplebar/simplebar.js"></script>*@
+</head>
+<body>
+    <partial name="_switcher" />
+    <partial name="_loader" />
+    <div class="page">
+        <partial name="_header" />
+        <partial name="_sidebar" />
+        <!-- Start::app-content -->
+        <div class="main-content app-content">
+            <div class="container-fluid custom-scrollbar">
+                @RenderBody()
+
+                <!-- Scroll To Top -->
+                <div class="scrollToTop">
+                    <span class="arrow">arrow<i class="ri-arrow-up-s-fill fs-20"></i></span>
+                </div>
+                <div id="responsive-overlay"></div>
+                <!-- Scroll To Top -->
+                <!-- Start::page-header -->
+                @* <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+                <h1 class="page-title fw-semibold fs-18 mb-0">Create Customer</h1>
+                <div class="ms-md-1 ms-0">
+                <nav>
+                <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="#">Customer</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Create Customer</li>
+                </ol>
+                </nav>
+                </div>
+                </div>*@
+
+                <!-- End::page-header -->
+                <!-- Start::row-1 -->
+                @* <div class="row">
+                <div class="col-xl-12">
+                @RenderBody()
+                </div>
+                </div>*@
+                <!-- End::row-1 -->
+            </div>
+        </div>
+        <!-- End::app-content -->
+        @*<partial name="_headersearch_modal" />*@
+        <partial name="_footer" />
+    </div>
+    
+    <!-- Scroll To Top -->
+    <div class="scrollToTop">
+        <span class="arrow">arrow<i class="ri-arrow-up-s-fill fs-20"></i></span>
+    </div>
+    <div id="responsive-overlay"></div>
+    <!-- Scroll To Top -->
+    <script src="~/bs/js/jquery.js"></script>
+    <script src="~/bs/js/jquery.slimscroll.min.js"></script>
+    <!-- validation -->
+    <script src="~/bs/js/jquery.validate.js"></script>
+    <script src="~/bs/js/jquery.validate.unobtrusive.js"></script>
+    <script src="~/bs/js/bs-validator.js" asp-append-version="true"></script>
+    <!-- Common js functions for the app -->
+    <script src="~/bs/js/bs.js" asp-append-version="true"></script>
+
+    <!-- Popper JS -->
+    <script src="~/bs/libs/@@popperjs/core/umd/popper.min.js"></script>
+
+    <!-- toaster JS -->
+    <script src="~/bs/js/toastr.min.js"></script>
+   @* <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>*@
+
+
+    <!-- Bootstrap JS -->
+    <script src="~/bs/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @*<partial name="_commonjs" />
+    <partial name="_custom_switcherjs" />*@
+
+    <!-- Defaultmenu JS -->
+    <script src="~/bs/js/defaultmenu.min.js"></script>
+
+    <!-- Node Waves JS-->
+    <script src="~/bs/libs/node-waves/waves.min.js"></script>
+
+    <!-- Sticky JS -->
+    <script src="~/bs/js/sticky.js"></script>
+
+    <!-- Simplebar JS -->
+    <script src="~/bs/libs/simplebar/simplebar.min.js"></script>
+    <script src="~/bs/js/simplebar.js"></script>
+
+    @*<script src="~/assets/js/sticky.js"></script>
+
+    <!-- Simplebar JS -->
+    <script src="~/assets/libs/simplebar/simplebar.min.js"></script>
+    <script src="~/assets/js/simplebar.js"></script>*@
+
+
+    <!-- Color Picker JS -->
+    <script src="~/bs/libs/@@simonwep/pickr/pickr.es5.min.js"></script>
+
+    @* <!-- JSVector Maps JS -->
+    <script src="~/assets/libs/jsvectormap/js/jsvectormap.min.js"></script>
+    <!-- JSVector Maps MapsJS -->
+    <script src="~/assets/libs/jsvectormap/maps/world-merc.js"></script>
+    <!-- Apex Charts JS -->
+    <script src="~/assets/libs/apexcharts/apexcharts.min.js"></script>
+    <!-- Chartjs Chart JS -->
+    <script src="~/assets/libs/chart.js/chart.min.js"></script>
+    <!-- CRM-Dashboard -->
+    <script src="~/assets/js/crm-dashboard.js"></script>*@
+    @*<partial name="_custom_switcherjs" />*@
+    <!-- Internal Choices JS -->
+    <!-- Custom-Switcher JS -->
+    <script src="~/bs/js/custom-switcher.min.js"></script>
+
+    <!-- Date & Time Picker JS -->
+    <script src="~/bs/libs/flatpickr/flatpickr.min.js"></script>
+
+    <!-- Toast JS -->
+  @*  <script src="~/bs/js/Toasts.js"></script>*@
+
+    @* <script src="~/assets/js/choices.js"></script>*@
+    @*<script src="~/assets/js/add-products.js"></script>*@
+
+    <!-- Form Validation JS -->
+    <script src="~/bs/js/validation.js"></script>
+    <!-- Custom JS -->
+    <script src="~/bs/js/custom.js"></script>
+ @*   <script src="https://unpkg.com/simplebar@5.3.3/dist/simplebar.min.js"></script>*@
+
+
+
+    @*<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    var genericExamples = document.querySelectorAll("[data-trigger]");
+    for (let i = 0; i < genericExamples.length; ++i) {
+    var element = genericExamples[i];
+    new Choices(element, {
+    allowHTML: true,
+    placeholderValue: "This is a placeholder set in the config",
+    searchPlaceholderValue: "Search",
+    });
+    }
+    });
+
+
+    </script>*@
+    <!-- Site Css -->
+    <link href="~/bs/css/site.css" rel="stylesheet">
+    @await Component.InvokeAsync("Notyf")
+    @RenderSection("Scripts", required: false)
+
+
+</body>
+</html>

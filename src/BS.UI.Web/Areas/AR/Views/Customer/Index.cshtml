@@ -1,0 +1,87 @@
+﻿@*@model IEnumerable<BS.Application.ViewModels.AR.ARCustomerVM>*@
+@{
+    Dictionary<string, string> data = ViewBag.Resources;
+    //var pageTitle = data[ResourceKeyEnum.AR_CUSTOMER_INDEX_PAGETITLE.ToString()];
+    //ViewBag.Title = pageTitle;
+    ViewBag.Title = ViewBag.Resources["AR_CUSTOMER_INDEX_PAGETITLE"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<script>
+    $(document).ready(function () {
+        $('#responsiveDataTable').DataTable();
+    });
+</script>*@
+
+<!-- Page Header -->
+<div class="d-md-flex d-block align-items-center justify-content-between my-2 page-header-breadcrumb">
+    <h1 class="page-title fw-semibold fs-18 mb-0">@ViewBag.Title</h1>
+</div>
+<!-- Page Header Close -->
+
+<div class="card custom-card">
+    <div class="card-header d-flex justify-content-end align-items-center w-100">
+        <div class="form-group mb-0 me-3">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <label for="arCustomerStatus" class="form-label mb-0">Status:</label>
+                </div>
+                <div class="col-auto">
+                    <select  id="arCustomerStatus" name="arCustomerStatus"
+                            class="form-select" style="width:max-content;">
+                        <option value="active">Active</option>
+                        <option value="archive">Archive</option>
+                        <option value="all">All</option>
+                    </select>
+                </div>
+           </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-wave" onclick="window.location='@Url.Action("Create", "Customer")'">Add Customer</button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="responsiveDataTable" class="table text-nowrap table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">GST Number</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">E-mail</th>
+                    </tr>
+                </thead>
+               <tbody>
+                   
+               </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Internal Datatables JS -->
+<script src="~/bs/js/datatables.js"></script>
+
+<style>
+    /*.card-header {
+        background-color: lightgray;
+    }*/
+
+    .table-header {
+        background-color: var(--default-body-bg-color);
+    }
+
+    .custom-header-control {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Add spacing between elements if needed */
+    .form-label, .form-select, .btn {
+        margin-right: 10px; /* Adjust the margin as needed */
+    }
+</style>
+
+@section Scripts{
+    <script src="~/bs/js/ar_customerlist.js" asp-append-version="true"></script>
+}
