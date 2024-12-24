@@ -55,6 +55,8 @@
                                             </div>
                                             <div class="ml-auto ms-2">
                                                 <input type="hidden" id="selCustomerId" name="selCustomerId" />
+                                                @* <button type="button" class="btn btn-primary btn-wave" onclick="window.location='@Url.Action("Index", "Challan")'">Back</button> *@
+                                                <button type="button" class="btn btn-primary" onclick="window.location='@Url.Action("Index", "Challan")'" id="back" name="back">Back<i class="ms-1 align-middle ri-send-plane-1-line  d-inline-block"></i></button>
                                                 <button class="btn btn-sm btn-icon btn-secondary-light"><i class="bi bi-printer-fill"></i></button>
                                                 <button class="btn btn-sm btn-icon btn-success-light"><i class="bi bi-download"></i></button>
                                             </div>
@@ -129,7 +131,7 @@
                                                     <div class="row">
                                                         <div class="col-xl-6">
                                                             <label for="challanNo" class="form-label">Challan No.</label>
-                                                            <input type="text" class="form-control" id="challanNo" name="challanNo" placeholder="Challan No." value="022/23-24">
+                                                            <input type="text" class="form-control" id="challanNo" name="challanNo" placeholder="Challan No." value="">
                                                         </div>
                                                         <div class="col-xl-6">
                                                             <label for="finYear" class="form-label">Fin Year</label>
