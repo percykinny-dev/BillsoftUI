@@ -3,3 +3,12 @@
 ################################################################################
 
 /.vs/billsoft
+/.vs/ProjectEvaluation
+
+# Ignore bin directory
+/bin/
+
+# Ignore other common directories and files
+/obj/
+/.vscode/
+/*.log
