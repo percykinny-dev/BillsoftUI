@@ -1,0 +1,12 @@
+E:\Projects\BillSoft\code\BillSoftDev\src\BS.Domain\bin\Release\net6.0\BS.Domain.deps.json
+E:\Projects\BillSoft\code\BillSoftDev\src\BS.Domain\bin\Release\net6.0\BS.Domain.dll
+E:\Projects\BillSoft\code\BillSoftDev\src\BS.Domain\bin\Release\net6.0\BS.Domain.pdb
+E:\Projects\BillSoft\code\BillSoftDev\src\BS.Domain\obj\Release\net6.0\BS.Domain.csproj.AssemblyReference.cache
+E:\Projects\BillSoft\code\BillSoftDev\src\BS.Domain\obj\Release\net6.0\BS.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\Projects\BillSoft\code\BillSoftDev\src\BS.Domain\obj\Release\net6.0\BS.Domain.AssemblyInfoInputs.cache
+E:\Projects\BillSoft\code\BillSoftDev\src\BS.Domain\obj\Release\net6.0\BS.Domain.AssemblyInfo.cs
+E:\Projects\BillSoft\code\BillSoftDev\src\BS.Domain\obj\Release\net6.0\BS.Domain.csproj.CoreCompileInputs.cache
+E:\Projects\BillSoft\code\BillSoftDev\src\BS.Domain\obj\Release\net6.0\BS.Domain.dll
+E:\Projects\BillSoft\code\BillSoftDev\src\BS.Domain\obj\Release\net6.0\refint\BS.Domain.dll
+E:\Projects\BillSoft\code\BillSoftDev\src\BS.Domain\obj\Release\net6.0\BS.Domain.pdb
+E:\Projects\BillSoft\code\BillSoftDev\src\BS.Domain\obj\Release\net6.0\ref\BS.Domain.dll
