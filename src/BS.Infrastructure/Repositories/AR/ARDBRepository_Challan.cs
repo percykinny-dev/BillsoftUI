@@ -44,7 +44,7 @@ public partial class ARDBRepository
     {
         var data = new ARChallanDetailVM();
 
-        var sql = @"[dbo].[procedure_name_goes_here]";
+        var sql = @"[dbo].[pAR_GetChallanDetails]";
         using (var connection = new SqlConnection(connectionString))
         {
             try
@@ -54,10 +54,13 @@ public partial class ARDBRepository
                     commandType: System.Data.CommandType.StoredProcedure))
                 {
                     //returns single row
-                    var challan = await query.ReadSingleAsync<ARChallan>();
+                    var challan = await query.ReadSingleAsync<ARChallanDataVM>();
 
 
                     data.Challan = challan;
+
+                    var challanDetail = await query.ReadAsync<ARChallanItemsVM>();
+                    data.ChallanItems = challanDetail.ToList();
                 }
             }
             catch (Exception ex)

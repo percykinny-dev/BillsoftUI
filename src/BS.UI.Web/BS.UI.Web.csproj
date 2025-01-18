@@ -46,15 +46,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="BS.Application">
-      <HintPath>..\..\..\..\BillSoftDev\src\BS.UI.Web\bin\Debug\net6.0\BS.Application.dll</HintPath>
-    </Reference>
-    <Reference Include="BS.Domain">
-      <HintPath>..\..\..\..\BillSoftDev\src\BS.UI.Web\bin\Debug\net6.0\BS.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="BS.Infrastructure">
-      <HintPath>..\..\..\..\BillSoftDev\src\BS.UI.Web\bin\Debug\net6.0\BS.Infrastructure.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\BS.Application\BS.Application.csproj" />
+    <ProjectReference Include="..\BS.Domain\BS.Domain.csproj" />
+    <ProjectReference Include="..\BS.Infrastructure\BS.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

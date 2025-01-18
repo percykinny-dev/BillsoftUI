@@ -100,7 +100,7 @@ namespace BS.UI.Web.Controllers
             return View();
         }
 
-        [Route("ChallanAddEdit")]
+        [Route("ChallanAddEdit/{challanId?}")]
         public async Task<ActionResult> ChallanAddEdit(int? challanId)
         {
             ViewBag.Resources = _resourceManager.GetResources();
@@ -112,15 +112,17 @@ namespace BS.UI.Web.Controllers
             if (challanId.HasValue)
             {
                 // Fetch the existing Challan details from the database
-                var existingChallan = await challanService.GetChallan(BSCompanyId, challanId.Value);
+                //var existingChallan = await challanService.GetChallan(BSCompanyId, challanId.Value);
+                var existingChallan = await challanService.GetChallanDetailVM(BSCompanyId, challanId.Value);
+
+
                 if (existingChallan == null)
                 {
                     // Handle the case where the Challan with the given ID doesn't exist
                     return NotFound();
                 }
 
-                customerId = existingChallan.CustomerID;
-
+                customerId = existingChallan.Challan.CustomerID;
                 // Populate the common properties with existing Challan details
                 //viewModel.ChallanId = existingChallan.Id;
                 //viewModel.CustomerId = existingChallan.CustomerId;
@@ -195,14 +197,14 @@ namespace BS.UI.Web.Controllers
 
         #region private methods
 
-        private void BindDropDowns(ARSharedListsVM data, ARChallan challan)
+        private void BindDropDowns(ARSharedListsVM data, ARChallanDataVM challan)
         {
             ViewBag.Customers = data.Customers
             .Select(s => new SelectListItem()
             {
                 Text = $"{s.Code} - {s.Title}",
                 Value = s.CustomerID.ToString(),
-                Selected = s.CustomerID == challan?.CustomerID
+                Selected = s.CustomerID == challan?.CustomerID  
             }).ToList();
 
 
