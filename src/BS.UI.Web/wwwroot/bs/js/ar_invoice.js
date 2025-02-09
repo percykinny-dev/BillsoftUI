@@ -1,5 +1,237 @@
 ﻿
+function ShowSearchModal() {
+    customerID
 
+    $("#invoiceSearchModal").modal('show');
+}
+
+function ShowHideAddress() {
+    let customerId = document.getElementById("customerID");
+    let addressRow = document.getElementById('addressRow');
+
+    var isCustomerSelected = (customerId.value !== '');
+
+    // Toggle the 'hidden-element' class based on the selection
+    if (isCustomerSelected) {
+        clearAddressFields();
+        document.getElementById('selCustomerId').value = customerId.value;
+
+        getCustomerDefaultAddress(customerId.value)
+            .then(function (defaultAddressList) {
+                if (defaultAddressList !== null) {
+                    defaultAddressList.forEach(function (address) {
+                        updateAddressFields(address);
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+
+        addressRow.classList.remove('hidden-element');
+    } else {
+        addressRow.classList.add('hidden-element');
+        document.getElementById('selCustomerId').value = '';
+    }
+
+}
+
+function getCustomerDefaultAddress(customerId) {
+    return new Promise(function (resolve, reject) {
+        let requestBody = { "customerId": customerId };
+        $('#loader').show();
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: (window.location.origin + "/AR/Customer/GetCustomerDefaultAddresses"),
+            data: requestBody,
+            success: function (response) {
+                $('#loader').hide();
+                if (response.success) {
+                    let customerAddress = response.data;
+                    resolve(customerAddress);
+                } else {
+                    reject(new Error("Failed to retrieve customer addresses."));
+                }
+            },
+            error: function (er) {
+                $('#loader').hide();
+                reject(new Error("Failed to retrieve customer addresses."));
+            }
+        });
+    });
+}
+
+// Call the function to populate the address list when the modal is shown
+//$('#addressModal').on('shown.bs.modal', function () {
+//    populateAddressList();
+//});
+
+// Function to dynamically populate and format the address list
+
+function getAddressList(addressType) {
+    //addressListContainer.innerHTML = '';
+    console.log("addressType: " + addressType.toString());
+
+    var customerId = document.getElementById('selCustomerId').value;
+    let addresses = null;
+    return new Promise(function (resolve, reject) {
+        let requestBody = { "customerId": customerId, "addressType": addressType };
+
+
+        $('#loader').show();
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: (window.location.origin + "/AR/Customer/GetCustomerAddressList"),
+            data: requestBody,
+            success: function (response) {
+                $('#loader').hide();
+                if (response.success) {
+                    addresses = response.data;
+                    resolve(addresses);
+                }
+            },
+            error: function (er) {
+                $('#loader').hide();
+                reject(new Error("Failed to retrieve customer addresses."));
+            }
+        });
+    });
+}
+
+function populateAddressList(addresses) {
+    //var addressListContainer = document.getElementById("addressListContainer");
+
+    // Clear existing content
+    //addressListContainer.innerHTML = '';
+
+    // Sample JSON array of addresses
+    /*
+    var addresses = [
+        {
+            Address1: "123 Main St",
+            Address2: "Apt 4",
+            City: "Cityville",
+            State: "CA",
+            Zip: "12345",
+            Phone: "555-1234"
+        },
+        {
+            Address1: "Krishna Nagar",
+            Address2: "Saki Naka",
+            City: "Mumbai",
+            State: "MH",
+            Zip: "400027",
+            Phone: "9819179555"
+        },
+        {
+            Address1: "23/6-7, 2nd Floor,",
+            Address2: " EAST PATEL NAGAR",
+            City: "Delhi",
+            State: "Delhi",
+            Zip: "110008",
+            Phone: "7789179555"
+        },
+        {
+            Address1: "4022 4TH FLR ONE AEROCITY,CORPORATE PARK",
+            Address2: "SAFED POOL ANDHERI KURLA RD SAKINAKA",
+            City: "Mumabi",
+            State: "MH",
+            Zip: "400072",
+            Phone: "7208968391"
+        },
+        // Add more addresses as needed
+    ];
+*/
+
+    // Get the address list container
+    var addressList = document.querySelector('.list-group');
+
+    // Clear existing list items
+    addressList.innerHTML = '';
+
+    // Loop through addresses and create list items
+    addresses.forEach(function (address, index) {
+        console.log("Address index", index);
+        var listItem = document.createElement("label");
+        listItem.classList.add('list-group-item');
+
+        var radioInput = document.createElement("input");
+        radioInput.type = "radio";
+        radioInput.className = "form-check-input me-1 pr-2 float-start";
+        radioInput.value = index;
+        radioInput.name = "list-radio";
+        listItem.setAttribute("data-index", index.toString());
+
+        if (index === 0) {
+            radioInput.checked = true; // Check the first radio button by default
+            listItem.classList.add('bg-primary-transparent');
+        }
+
+        // Create a div for address details
+        var addressDetails = document.createElement('div');
+        //addressDetails.classList.add('float-end');
+        addressDetails.style = "padding-left: 3rem";
+
+        // Add address details to the div
+        addressDetails.innerHTML = `
+            <div>${address.Address1}</div>
+            <div>${address.Address2}</div>
+            <div>${address.City}, ${address.State} ${address.Zip}</div>
+            <div>${address.Phone}</div>
+        `;
+
+        listItem.appendChild(radioInput);
+
+        // Append the radio input and address details to the list item
+        listItem.appendChild(radioInput);
+        listItem.appendChild(addressDetails);
+
+        // Append the list item to the address list container
+        addressList.appendChild(listItem);
+
+        // Add a click event listener to each list item
+        listItem.addEventListener('click', function () {
+            // Remove 'selected' class from all items
+            document.querySelectorAll('.list-group-item').forEach(item => {
+                item.classList.remove('bg-primary-transparent');
+            });
+
+            // Add 'selected' class to the clicked item
+            listItem.classList.add('bg-primary-transparent');
+
+            let selectedIndex = Number(listItem.getAttribute("data-index"));
+
+            var btnOk = document.getElementById('selectAddressYes');
+            btnOk.addEventListener('click', function () {
+                updateAddressFields(addresses[selectedIndex]);
+                // Close the modal
+                $('#addressModal').modal('hide');
+            });
+        });
+
+    });
+}
+
+function ShowAddressList(addressType) {
+
+    //populateAddressList(addressType);
+    getAddressList(addressType)
+        .then(function (customerAddressList) {
+            if (customerAddressList !== null) {
+                populateAddressList(customerAddressList);
+            }
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+
+
+    $("#addressModal").modal('show');
+}
+
+/*
 $(document).on('click', '#saveCustomer', function (e) {
 
     hideTabValidationError();
@@ -8,8 +240,8 @@ $(document).on('click', '#saveCustomer', function (e) {
         return false;
     }
 
-    let customerId = 0;
 
+    let customerId = 0;
     //let customerId = parseInt(document.getElementById("customerId").value);
     let code = document.getElementById("code").value;
     let firstname = document.getElementById("firstName").value;
@@ -17,7 +249,7 @@ $(document).on('click', '#saveCustomer', function (e) {
     let gstno = document.getElementById("gstNo").value;
     let emailaddress = document.getElementById("emailAdress").value;
     let mobilephone = document.getElementById("mobilePhone").value;
-    
+
     let requestBody = {
         "ID": customerId,
         "Code": code,
@@ -53,26 +285,37 @@ $(document).on('click', '#saveCustomer', function (e) {
     //    }
     //});
 });
+*/
 
-function ShowHideAddress() {
-    let customerid = document.getElementById("customerID");
-    let addressRow = document.getElementById('addressRow');
+function updateAddressFields(selectedAddress) {
+    //clearAddressFields();
 
-    var isCustomerSelected = (customerid.value !== '');
-
-    // Toggle the 'hidden-element' class based on the selection
-    if (isCustomerSelected) {
-        addressRow.classList.remove('hidden-element');
-    } else {
-        addressRow.classList.add('hidden-element');
+    if (selectedAddress.addressType == 1) {
+        //document.getElementById('billAddress').value = selectedAddress.address1 + ' ' + selectedAddress.address2 + ',' + selectedAddress.city + ',' + selectedAddress.state;
+        document.getElementById('billAddress').innerText = selectedAddress.address1 + ' ' + selectedAddress.address2 + ',' + selectedAddress.city + ',' + selectedAddress.state;
+        document.getElementById('billZipcode').innerText = selectedAddress.zipcode;
+        //document.getElementById('billContact').value = selectedAddress.contactName;
+        document.getElementById('billContact').innerText = selectedAddress.contactName;
+        document.getElementById('billEmailAddress').innerText = selectedAddress.emailAddress;
+        document.getElementById('billPhone').innerText = selectedAddress.workPhone;
+        document.getElementById('billAddressId').value = selectedAddress.addressID;
     }
+    else {
+        document.getElementById('shipAddress').innerText = selectedAddress.address1 + ' ' + selectedAddress.address2 + ',' + selectedAddress.city + ',' + selectedAddress.state;
+        document.getElementById('shipZipcode').innerText = selectedAddress.zipcode;
+        document.getElementById('shipContact').innerText = selectedAddress.contactName;
+        document.getElementById('shipEmailAddress').innerText = selectedAddress.emailAddress;
+        document.getElementById('shipPhone').innerText = selectedAddress.workPhone;
+        document.getElementById('shipAddressId').value = selectedAddress.addressID;
+    }
+
 }
 
-// Add New Invoice Detail row
+/*
 function addRow() {
     // Clone the existing row
 
-    
+
     var existingRow = document.getElementById("itemRow1");
     var newRow = existingRow.cloneNode(true);
 
@@ -110,31 +353,274 @@ function addRow() {
     //initializeDropdown(clonedDropdown);
 
 }
+*/
+function clearAddressFields() {
+    document.getElementById('billAddress').innerText = '';
+    document.getElementById('billZipcode').innerText = '';
+    document.getElementById('billContact').innerText = '';
+    document.getElementById('billEmailAddress').innerText = '';
+    document.getElementById('billPhone').innerText = '';
+
+    document.getElementById('shipAddress').innerText = '';
+    document.getElementById('shipZipcode').innerText = '';
+    document.getElementById('shipContact').innerText = '';
+    document.getElementById('shipEmailAddress').innerText = '';
+    document.getElementById('shipPhone').innerText = '';
+
+}
+function addNewRow() {
+    if (!validateProductDetails()) {
+        setTimeout(function () {
+            $('#solid-dangerToast').show();
+
+        }, 5);
+        /*$('#solid-dangerToast').show();*/
+        return;
+    }
+
+    var rowValues = getRowValues();
+    //>> Check Duplicate records based on Item
+    var isExist = CheckDuplicatesProducts(rowValues.productNameVal);
+    if (isExist) {
+        alert('Duplicate record !!! Similar Product exists...');
+        return;
+    }
+    //<<
+    // Construct the HTML for the new row in the child table
+    var newRowHtml = '<tr>';
+
+    newRowHtml += '<td><input type="checkbox" id="row' + rowValues.rowCount + '" class="form-check-input"></td>'; // Checkbox column
+    newRowHtml += '<td data-productname="' + rowValues.productNameVal + '" ><a href="#" onclick="selectRow(' + rowValues.rowCount + ');event.preventDefault();">' + rowValues.productName + '</a></td>'; // Product Name
+    newRowHtml += '<td data-hsnno="' + rowValues.hsnNo + '">' + rowValues.hsnNo + '</td>'; // HSN No
+    newRowHtml += '<td data-uom="' + rowValues.uomVal + '">' + rowValues.uom + '</td>'; // UOM
+    newRowHtml += '<td data-qty="' + rowValues.quantity + '">' + rowValues.quantity + '</td>'; // Quantity
+    newRowHtml += '<td data-rate="' + rowValues.rate + '">' + rowValues.rate + '</td>'; // Rate
+    newRowHtml += '<td data-tax="' + rowValues.taxVal + '" data-gst="' + rowValues.tax + '">' + rowValues.taxString + '</td>'; // Tax
+    newRowHtml += '<td data-rowTotal="' + rowValues.total + '">' + rowValues.total + '</td>'; // Total
+    newRowHtml += '</tr>';
+
+    // Append the new row to the child table
+    $('#childTableBody').append(newRowHtml);
+
+    // Recalculate TaxTotal
+    recalculateTotals();
+    //Reset dropdowns and textboxes
+    resetDropdownTextboxes();
+
+    //document.getElementById("editRow").disabled = false;
+    document.getElementById("deleteRow").disabled = false;
+}
+
+function getRowValues() {
+    var productName = $('#itemId1 option:selected').text();
+    var productNameVal = $('#itemId1 option:selected').val();
+    var hsnNo = $('#hsnNo').val();
+    var uom = $('#uom option:selected').text();
+    var uomVal = $('#uom option:selected').val();
+    var quantity = $('#qty').val();
+    var rate = $('#rate').val();
+
+    var pattern = /[\d\.]+/g;  // /\[(\d+)%\]/;
+    var tax = extractNumericValue($('#taxType option:selected').text(), pattern) || 0;
+    var taxString = $('#taxType option:selected').text();
+    var taxVal = $('#taxType option:selected').val();
+    var total = $('#rowTotal').val();
+    var rowCount = $('#childTableBody tr').length;
+    return {
+        productName: productName,
+        productNameVal: productNameVal,
+        hsnNo: hsnNo,
+        uom: uom,
+        uomVal: uomVal,
+        quantity: quantity,
+        rate: rate,
+        tax: tax,
+        taxString: taxString,
+        taxVal: taxVal,
+        total: total,
+        rowCount: rowCount
+    };
+}
+
+// Function to extract numeric value from GST [%] value
+function extractNumericValue(inputString, pattern) {
+    var match = inputString.match(pattern);
+    if (match && match.length > 1) {
+        return parseInt(match[1]);
+    } else {
+        return null; // Return null if no match found
+    }
+}
+
+function closeErrorDiv() {
+    $('#solid-dangerToast').hide();
+}
+
+$('body').on('click', function (e) {
+    // Check if the click event occurred outside the toast container
+    if (!$(e.target).closest('.toast-container').length) {
+        // If so, hide the toast
+        $('#solid-dangerToast').hide();
+    }
+});
+
+function selectRow(rowIndex) {
+
+    $('#selRowIndex').val(rowIndex);
+
+    var row = $('#childTableBody tr').eq(rowIndex);
+    var rowData = {
+        itemName: row.find('[data-productname]').data('productname'),
+        hsnNo: row.find('[data-hsnno]').data('hsnno'),
+        uom: row.find('[data-uom]').data('uom') + '',
+        qty: row.find('[data-qty]').data('qty'),
+        rate: row.find('[data-rate]').data('rate'),
+        tax: row.find('[data-tax]').data('tax') + '',
+        rowTotal: row.find('[data-rowtotal]').data('rowtotal'),
+        // Add other fields here
+    };
+    console.log(rowData);
+    console.log(rowData.itemName);
+
+    //var itemNameTxt = row.find('td:nth-child(1)').textContent;
+    //$('#itemId1').val(rowData.itemName);
+    $('#hsnNo').val(rowData.hsnNo);
+    //$('#uom option:selected').val(rowData.uom);
+    $('#qty').val(rowData.qty);
+    $('#rate').val(rowData.rate);
+    //$('#taxType option:selected').val(rowData.tax);
+    $('#rowTotal').val(rowData.rowTotal);
+
+    itemDropdown.setChoiceByValue(rowData.itemName.toString());
+    //itemDropdown.setChoiceByValue(rowData.itemName);
+    uomDropdown.setChoiceByValue(rowData.uom);
+    taxDropdown.setChoiceByValue(rowData.tax);
+
+    document.getElementById("addRow").disabled = true;
+    document.getElementById("editRow").disabled = false;
+    document.getElementById("deleteRow").disabled = true;
+    //console.log(productName, hsnNo, uom, quantity, rate, tax, total);
+}
+
+function editSelectedRow() {
+    if (!validateProductDetails()) {
+        setTimeout(function () {
+            $('#solid-dangerToast').show();
+
+        }, 5);
+        /*$('#solid-dangerToast').show();*/
+        return;
+    }
+
+    var rowIndex = parseInt(document.getElementById('selRowIndex').value);
+    if (isNaN(rowIndex)) { return };
+
+    var row = $('#childTableBody tr').eq(rowIndex);
+    var rowValues = getRowValues();
+
+    // Update cell values in the row
+    var productHtml = '<a href="#" onclick="selectRow(' + rowIndex + ');event.preventDefault();">' + rowValues.productName + '</a>'
+    //alert(productHtml);
+    //row.find('td[data-productname]').innerHTML = productHtml;
+    //row.querySelector('td[data-productname]').innerHTML = productHtml;
+    $(row).find('td[data-productname]').html(productHtml);
+    row.find('td[data-hsnno]').text(rowValues.hsnNo);
+    row.find('td[data-uom]').text(rowValues.uom);
+    row.find('td[data-qty]').text(rowValues.quantity);
+    row.find('td[data-rate]').text(rowValues.rate);
+    row.find('td[data-tax]').text(rowValues.taxString);
+    row.find('td[data-rowtotal]').text(rowValues.total);
+
+    row.find('td[data-productname]').data("productname", rowValues.productNameVal);
+    //row.find('td[data-productname]').data("productname", rowValues.productName);
+    row.find('td[data-hsnno]').data("hsnno", rowValues.hsnNo);
+    row.find('td[data-uom]').data("uom", rowValues.uomVal);
+    row.find('td[data-qty]').data("qty", rowValues.quantity);
+    row.find('td[data-rate]').data("rate", rowValues.rate);
+    row.find('td[data-tax]').data("tax", rowValues.taxVal);
+    row.find('td[data-gst]').data("gst", rowValues.tax);
+    row.find('[data-rowtotal]').data("rowtotal", rowValues.total);
+
+    recalculateTotals();
+
+    clearDropdownTextboxes();
+}
+
+/**
+ * Deletes the selected rows from the table.
+ * 
+ * This function checks if any rows are selected, prompts the user for confirmation, 
+ * and then removes the selected rows from the table. It also recalculates the totals 
+ * and disables the delete button if no rows are left in the table.
+ */
+//var temp = 1;
+function deleteSelectedRows() {
+    if (document.querySelectorAll('input[type="checkbox"]:checked').length == 0) {
+        alert('Select row(s) to delete ...');
+        return;
+    }
+    if (confirm("Do you wish to delete?")) {
+        // code to delete the item goes here
+        document.querySelectorAll('#childTableBody .form-check-input:checked').forEach(e => {
+            e.parentNode.parentNode.remove()
+        });
+        recalculateTotals();
+
+        var tableSize = $('#childTableBody tr').length;
+        if (tableSize == 0) {
+            document.getElementById("deleteRow").disabled = true;
+        }
+    } else {
+        // do nothing or handle cancellation
+    }
+}
 
 function removeRow(rowId) {
     var rowToRemove = document.getElementById(rowId);
     rowToRemove.parentNode.removeChild(rowToRemove);
 }
 
-function initializeDropdown(newDropdown) {
-    //var element = genericExamples[i];
-    new Choices(newDropdown, {
-        allowHTML: true,
-        placeholderValue: "This is a placeholder set in the config",
-        searchPlaceholderValue: "Search",
-    });
 
-    //var genericExamples = document.querySelectorAll("[data-trigger]");
-    //for (let i = 0; i < genericExamples.length; ++i) {
-    //    var element = genericExamples[i];
-    //    new Choices(element, {
-    //        allowHTML: true,
-    //        placeholderValue: "This is a placeholder set in the config",
-    //        searchPlaceholderValue: "Search",
-    //    });
-    //}
+function resetDropdownTextboxes() {
+    clearDropdownTextboxes();
 
 }
+function recalculateTotals() {
+
+    let grandTotal = 0;
+    let subTotal = 0;
+    let cgstTotal = 0;
+    let sgstTotal = 0;
+    var rowTotal = 0;
+    var gstRate = 0;
+    var discount = 0;
+
+    $('#childTableBody tr').each(function (rowIndex, row) {
+        // Initialize an object to store the column values of the current row
+        var rowData = {};
+
+        rowTotal = parseFloat($(row).find('[data-rowtotal]').data('rowtotal'));
+        subTotal = parseFloat(subTotal) + rowTotal;
+        gstRate = parseFloat($(row).find('[data-gst]').data('gst'));
+        //gstRate = parseFloat($(row).find('[data-tax]').data('tax'));
+        cgstTotal = cgstTotal + (rowTotal * (gstRate * 0.5) / 100);
+        sgstTotal = sgstTotal + (rowTotal * (gstRate * 0.5) / 100);
+    });
+
+    if ($('#discount').val() != '' && !isNaN(($('#discount').val()))) {
+        discount = parseFloat($('#discount').val()).toFixed(2);
+    }
+
+    grandTotal = subTotal + cgstTotal + sgstTotal - discount;
+
+    $('#subTotal').val(subTotal.toFixed(2));
+    $('#cgst').val(cgstTotal.toFixed(2));
+    $('#sgst').val(sgstTotal.toFixed(2));
+    $('#grandTotal').val(grandTotal.toFixed(2));
+
+}
+
+
 
 function replicateDropdown() {
     // Clone the dropdown
@@ -143,13 +629,38 @@ function replicateDropdown() {
 
     // Update the cloned dropdown's id to ensure uniqueness
     //var rowCount = document.querySelectorAll('tbody tr').length + 1;
-    clonedDropdown.id = 'itemId5'; 
+    clonedDropdown.id = 'itemId5';
     document.getElementById('tstProduct').appendChild(clonedDropdown);
     initializeDropdown(clonedDropdown);
-    
+
 }
 
-function addBlankRow() {
+function clearDropdownTextboxes() {
+    itemDropdown.setChoiceByValue("0");
+    uomDropdown.setChoiceByValue("0");
+    taxDropdown.setChoiceByValue("0");
+
+    $('#hsnNo').val('');
+    $('#qty').val('');
+    $('#rate').val('');
+    $('#rowTotal').val('');
+
+    // Enable/Disable Action buttons
+    document.getElementById("addRow").disabled = false;
+    document.getElementById("editRow").disabled = true;
+    var tableSize = $('#childTableBody tr').length;
+    if (tableSize == 0) {
+        document.getElementById("deleteRow").disabled = true;
+    }
+    else {
+        document.getElementById("deleteRow").disabled = false;
+    }
+
+}
+
+
+//function addBlankRow() {
+function addBlankRow_deprecated() {
     // Create a new row
     var newRow = document.createElement('tr');
     var newRowId = "itemRow" + (document.querySelectorAll("[id^='itemRow']").length + 1);
@@ -191,7 +702,7 @@ function addBlankRow() {
     dropdown.appendChild(option2);
     dropdown.appendChild(option3);
     // Append more options as needed...
-    
+
     // Append the dropdown to the first cell
     cell1.appendChild(dropdown);
 
@@ -219,7 +730,7 @@ function addBlankRow() {
 
     // Attach the click event handler to the button
     quantityMinusButton.addEventListener("click", function () {
-        changeQty(quantityMinusButton,0);
+        changeQty(quantityMinusButton, 0);
     });
 
     var quantityPlusButton = document.createElement('button');
@@ -291,6 +802,25 @@ function addBlankRow() {
     initializeDropdown(dropdown);
 }
 
+function initializeDropdown(newDropdown) {
+    //var element = genericExamples[i];
+    new Choices(newDropdown, {
+        //allowHTML: true,
+        placeholderValue: "This is a placeholder set in the config",
+        searchPlaceholderValue: "Search",
+    });
+
+    //var genericExamples = document.querySelectorAll("[data-trigger]");
+    //for (let i = 0; i < genericExamples.length; ++i) {
+    //    var element = genericExamples[i];
+    //    new Choices(element, {
+    //        allowHTML: true,
+    //        placeholderValue: "This is a placeholder set in the config",
+    //        searchPlaceholderValue: "Search",
+    //    });
+    //}
+
+}
 function changeQty(actionbutton, actionType) {
     //console.log("button clicked: ", actionbutton)
     var value = 1,
@@ -308,6 +838,217 @@ function changeQty(actionbutton, actionType) {
         actionbutton.parentElement.childNodes[1].value = value;
     }
 }
+
+function CalculateRowTotal() {
+    var qtyValue = $('#qty').val();
+    var rateValue = $('#rate').val();
+
+    if (isNaN(qtyValue) || isNaN(rateValue)) {
+        return;
+    }
+
+    qtyValue = parseFloat(qtyValue);
+    rateValue = parseFloat(rateValue);
+
+    var total = qtyValue * rateValue;
+    $('#rowTotal').val(total);
+
+}
+
+function CheckDuplicatesProducts(itemId) {
+    var isValid = false;
+    $('#childTableBody tr').each(function (rowIndex, row) {
+        let rowitemId = $(row).find('[data-productname]').data('productname');
+
+        if (rowitemId == itemId) {
+            isValid = true;
+            return isValid;
+        }
+    });
+    return isValid;
+}
+
+
+/**
+ * Check for duplicate products in the product detail table.
+ * 
+ * @param {string} tableId - The ID of the product detail table element.
+ * @param {number} columnIndex - The index of the column to check for duplicates (0-based).
+ * @returns {boolean} True if no duplicates are found, false otherwise.
+ */
+function checkForDuplicateProducts(tableId, columnIndex) {
+    // Get the product detail table element
+    var tableproductDetail = document.getElementById(tableId);
+    if (!tableproductDetail) {
+        throw new Error(`Table element with ID '${tableId}' not found`);
+    }
+
+    // Get the rows of the product detail table
+    var rows = tableproductDetail.rows;
+
+    // Create a set to store unique product values and an array to store duplicate values
+    var uniqueValues = new Set();
+    var duplicateValues = [];
+
+    for (var i = 0; i < rows.length; i++) {
+        // Get the text content of the specified cell in the current row
+        var value = rows[i].cells[columnIndex].textContent;
+
+        if (uniqueValues.has(value)) {
+            duplicateValues.push(value);
+        } else {
+            uniqueValues.add(value);
+        }
+    }
+
+    // Check if there are any duplicate values
+    if (duplicateValues.length > 0) {
+        alert('Duplicate Product found: ' + duplicateValues);
+        console.log('Duplicate values:', duplicateValues);
+        return false;
+    }
+    return true;
+}
+
+// Save Invoice
+$(document).on('click', '#saveInvoice', function (e) {
+    e.preventDefault();
+    hideTabValidationError();
+
+    if (!$("#frmInvoice").valid()) {
+        console.log("invalid form invoice");
+        return false;
+    }
+
+    var tableSize = $('#childTableBody tr').length;
+    if (tableSize == 0) {
+        alert('Invoice should have atleast one Product detail');
+        return false;
+    }
+
+
+    // Check for duplicate products in the product detail table
+    // 1 for cell/column name/position
+    if (!checkForDuplicateProducts('productDetailTable', 1)) {
+        return false;
+    }
+
+    let invoiceId = parseInt(document.getElementById("invoiceId").value);
+    let customerId = document.getElementById("customerID").value;
+    let billAddressId = document.getElementById("billAddressId").value;
+    let shipAddressId = document.getElementById("shipAddressId").value;
+    let currency = document.getElementById("currency").value;
+
+    let invoiceNo = parseInt(document.getElementById("invoiceNo").value);
+    let finYear = parseInt(document.getElementById("finYear").value);
+    let invoiceDate = document.getElementById("invoiceDate").value;
+    let dueDate = document.getElementById("dueDate").value;
+
+    let challanNo = document.getElementById("challanNo").value;
+    let issuedDate = document.getElementById("issuedDate").value;
+    let purchaseOrder = document.getElementById("purchaseOrder").value;
+    let poDate = document.getElementById("poDate").value;
+    let note = document.getElementById("note").value;
+
+    let subTotal = document.getElementById("subTotal").value;
+    let discount = document.getElementById("discount").value;
+
+    let cgst = document.getElementById("cgst").value;
+    let sgst = document.getElementById("sgst").value;
+    let totalAmount = document.getElementById("grandTotal").value;
+
+    let invoiceData = {
+        "InvoiceID": invoiceId,
+        "CustomerID": customerId,
+        "BillAddressID": billAddressId,
+        "ShipAddressID": shipAddressId,
+        "Currency": currency,
+        "InvoiceNo": invoiceNo,
+        "FinYear": finYear,
+        "InvoiceDate": invoiceDate,
+        "DueDate": dueDate,
+        "ChallanNo": challanNo,
+        "ChallanDate": issuedDate,
+        "PurchaseOrderNo": purchaseOrder,
+        "PurchaseOrderDate": poDate,
+        "Description": note,
+        "SubTotal": subTotal,
+        "Discount": discount,
+        "CGSTAmount": cgst,
+        "SGSTAmount": sgst,
+        "TotalAmount": totalAmount
+    };
+    // Loop and read data from the html table for ARCHallanDetails
+
+    const arinvoiceDetails = [];
+
+    const table = document.getElementById('productDetailTable');
+
+
+    // Loop through the rows (skip the header row)
+    for (let i = 1; i < table.rows.length; i++) {
+        const row = table.rows[i];
+        const arinvoiceDetail = {
+            //StatusID: row.cells[0].textContent,
+            ItemID: row.cells[1].getAttribute("data-productname"),
+            HSNCode: row.cells[2].textContent,
+            Uom: row.cells[3].getAttribute("data-uom"),
+            Quantity: row.cells[4].getAttribute("data-qty"),
+            Rate: row.cells[5].getAttribute("data-rate"),
+            //GSTRateID: row.cells[6].getAttribute("data-taxItemRate"), -- add ItemId GST Rate
+            GSTRateTypeID: row.cells[6].getAttribute("data-tax"),
+            Total: row.cells[7].getAttribute("data-rowtotal"),
+            // Add other properties as needed
+        };
+        arinvoiceDetails.push(arinvoiceDetail);
+    }
+
+    const requestData = {
+        invoice: invoiceData,
+        invoiceItems: arinvoiceDetails,
+    };
+
+    //const requestData = {
+    //    challanData,
+    //    archallanDetails
+    //};
+
+    // Convert to JSON string
+    const jsonRequestBody = JSON.stringify(requestData);
+
+    //Body should contain Invoice and Invoice Details
+    //console.log(jsonRequestBody);
+    //return false;
+
+    $('#loader').show();
+    $.ajax({
+        type: 'POST',
+        //contentType: 'application/json',
+        dataType: 'json',
+        url: (window.location.origin + '/AR/Invoice/SaveInvoice'),
+        data: requestData,
+        success: function (response) {
+            $('#loader').hide();
+            if (response.success) {
+                let invoiceId = 0;
+                //invoiceId = response.InvoiceId;
+                if (invoiceId === 0) {
+                    invoiceId = parseInt(response.data.invoiceId);
+                    document.getElementById("invoiceId").value = invoiceId;
+
+                    let redirectUrl = window.location.origin + "/AR/Invoice/Index";
+                    setTimeout(function () {
+                        console.log("Redirecting to Index page");
+                        window.location.href = redirectUrl;
+                    }, 2000);
+                }
+            }
+        },
+        error: function (er) {
+            $('#loader').hide();
+        }
+    });
+});
 
 function SetupFormValidation() {
 
@@ -344,188 +1085,67 @@ function SetupFormValidation() {
     //});
 
 
-    $("#frmCustomer").validate({
+    $("#frmInvoice").validate({
         errorClass: "invalid-form-control",
         ignore: "",
-        invalidHandler: function () {
+        invalidHandler: function (event, validator) {
             setTimeout(function () {
                 showTabValidationError();
             });
         },
         rules: {
-            code: {
+            customerID: {
+                required: true
+            },
+            billAddressId: {
+                required: true
+            },
+            shipAddressId: {
+                required: true
+            },
+            invoiceNo: {
                 required: true,
                 maxlength: 20
             },
-            firstName: {
-                required: true,
-                maxlength: 100
+            invoiceDate: {
+                required: true
             },
-            lastName: {
-                required: true,
-                maxlength: 100
+            currency: {
+                required: true
             },
-            gstNo: {
-                maxlength: 15
-            },
-            emailAddress: {
-                email: true,
-                maxlength: 100
-            },
-            mobilePhone: {
-                inTelephone: true,
-                maxlength: 20
+            grandTotal: {
+                required: true
             }
         },
         messages: {
-            code: {
-                required: "Enter code",
-                maxlength: "Code length should not exceed 20 characters"
+            customerID: {
+                required: "Select a customer"
             },
-            firstName: {
-                required: "Enter firstname",
-                maxlength: "First Name length should not exceed 100 characters"
+            billAddressId: {
+                required: "Select billing address"
             },
-            lastName: {
-                required: "Enter lastname",
-                maxlength: "First Name length should not exceed 100 characters"
+            shipAddressId: {
+                required: "Select shipping address"
             },
-            gstNo: {
-                maxlength: "GSTNo length should not exceed 15 characters"
+            invoiceNo: {
+                required: "Enter invoice",
+                maxlength: "Invoice length should not exceed 20 characters"
             },
-            emailAddress: {
-                email:      "Please enter valid emailaddress",
-                maxlength: "Email Address length should not exceed 10 characters"
+            invoiceDate: {
+                required: "Select invoice date"
             },
-            mobilePhone: {
-                inTelephone: "Please enter valid Phone number",
-                maxlength: "Mobile Phone length should not exceed 20 characters"
+            currency: {
+                required: "Select currency"
+            },
+            grandTotal: {
+                required: "Invoice should have valid amount"
             }
+
         }
     });
-
-}
-
+};
 
 
-// Function to dynamically populate and format the address list
-function populateAddressList() {
-    //var addressListContainer = document.getElementById("addressListContainer");
-
-    // Clear existing content
-    //addressListContainer.innerHTML = '';
-
-    // Sample JSON array of addresses
-    var addresses = [
-        {
-            Address1: "123 Main St",
-            Address2: "Apt 4",
-            City: "Cityville",
-            State: "CA",
-            Zip: "12345",
-            Phone: "555-1234"
-        },
-        {
-            Address1: "Krishna Nagar",
-            Address2: "Saki Naka",
-            City: "Mumbai",
-            State: "MH",
-            Zip: "400027",
-            Phone: "9819179555"
-        },
-        {
-            Address1: "23/6-7, 2nd Floor,",
-            Address2: " EAST PATEL NAGAR",
-            City: "Delhi",
-            State: "Delhi",
-            Zip: "110008",
-            Phone: "7789179555"
-        },
-        {
-            Address1: "4022 4TH FLR ONE AEROCITY,CORPORATE PARK",
-            Address2: "SAFED POOL ANDHERI KURLA RD SAKINAKA",
-            City: "Mumabi",
-            State: "MH",
-            Zip: "400072",
-            Phone: "7208968391"
-        },
-        // Add more addresses as needed
-    ];
-
-
-    // Get the address list container
-    var addressList = document.querySelector('.list-group');
-
-    // Clear existing list items
-    addressList.innerHTML = '';
-
-    // Loop through addresses and create list items
-    addresses.forEach(function (address, index) {
-        console.log("Address index", index);
-        var listItem = document.createElement("label");
-        listItem.classList.add('list-group-item');
-
-        var radioInput = document.createElement("input");
-        radioInput.type = "radio";
-        radioInput.className = "form-check-input me-1 pr-2 float-start";
-        radioInput.value = index;
-        radioInput.name = "list-radio";
-        listItem.setAttribute("data-index", index.toString());
-
-        if (index === 0) {
-            radioInput.checked = true; // Check the first radio button by default
-            listItem.classList.add('bg-primary-transparent');
-        }
-
-        // Create a div for address details
-        var addressDetails = document.createElement('div');
-        //addressDetails.classList.add('float-end');
-        addressDetails.style = "padding-left: 3rem";
-
-        // Add address details to the div
-        addressDetails.innerHTML = `
-            <div>${address.Address1}</div>
-            <div>${address.Address2}</div>
-            <div>${address.City}, ${address.State} ${address.Zip}</div>
-            <div>${address.Phone}</div>
-        `;
-
-        listItem.appendChild(radioInput);
-
-        // Append the radio input and address details to the list item
-        listItem.appendChild(radioInput);
-        listItem.appendChild(addressDetails);
-
-        // Append the list item to the address list container
-        addressList.appendChild(listItem);
-
-        // Add a click event listener to each list item
-        listItem.addEventListener('click', function () {
-            // Remove 'selected' class from all items
-            document.querySelectorAll('.list-group-item').forEach(item => {
-                item.classList.remove('bg-primary-transparent');
-            });
-
-            // Add 'selected' class to the clicked item
-            listItem.classList.add('bg-primary-transparent');
-
-            let selectedIndex = Number(listItem.getAttribute("data-index"));
-
-            var btnOk = document.getElementById('selectAddressYes');
-            btnOk.addEventListener('click', function () {
-                updateAddressFields(addresses[selectedIndex]);
-                // Close the modal
-                $('#addressModal').modal('hide');
-            });
-        });
-
-    });
-}
-
-function updateAddressFields(selectedAddress) {
-    document.getElementById('billAddress').value = selectedAddress.Address1 + ' ' + selectedAddress.Address2 + ',' + selectedAddress.City + ',' + selectedAddress.State;
-    document.getElementById('billZipcode').value = selectedAddress.Zip;
-}
 
 // Call the function to populate the address list when the modal is shown
 $('#addressModal').on('shown.bs.modal', function () {
@@ -537,23 +1157,74 @@ function ShowAddressList() {
     $("#addressModal").modal('show');
 }
 
+// Document Ready function
+let itemDropdown;
+let uomDropdown;
+let taxDropdown;
+
 $(document).ready(function () {
 
     //SetupDataTables();
 
-    //SetupFormValidation();
+    //>> EditChallan Function Starts
+    /*
+    if (viewModel && viewModel.Challan && viewModel.Challan.ChallanID > 0) {
 
-    //var simpleBarElement = document.querySelector('.simplebar');
-    //var simpleBarElement = document.getElementById("invCard");
-    //var simpleBar = new SimpleBar(simpleBarElement, { autoHide: false });
+        //console.log(viewModel.Challan.ChallanID);
+        $('#ChallanNo').val(viewModel.Challan.ChallanNo);
+        $('#issuedDate').val(viewModel.Challan.ChallanDate);
+        $('#CustomerID').val(viewModel.Challan.CustomerID);
+        $('#billAddressId').val(viewModel.Challan.BillAddressID);
+        $('#shipAddressId').val(viewModel.Challan.shipAddressId);
+        $('#finYear').val(viewModel.Challan.FAYear);
+        $('#purchaseOrder').val(viewModel.Challan.PurchaseOrderNo);
+        $('#poDate').val(viewModel.Challan.PurchaseOrderDate);
+        $('#note').val(viewModel.Challan.Description);
+        $('#currency').val(viewModel.Challan.PaymentTermID);
+
+        viewModel.ChallanItems.forEach(function (item) {
+            // Construct the HTML for the new row in the child table
+            //alert(item.CGST_Rate.toString());
+            var taxString = item.GSTType + " [ " + item.CGST_Rate.toFixed(2).toString() + "% ]"
+            var rowcnt = $('#childTableBody tr').length;
+            var newRowHtml = '<tr>';
+            newRowHtml += '<td><input type="checkbox" id="row' + rowcnt + '" class="form-check-input"></td>'; // Checkbox column
+            newRowHtml += '<td data-productname="' + item.ItemID + '" ><a href="#" onclick="selectRow(' + rowcnt + ');event.preventDefault();">' + item.ItemName + '</a></td>'; // Product Name
+            newRowHtml += '<td data-hsnno="' + item.HSNCode + '">' + item.HSNCode + '</td>'; // HSN No
+            newRowHtml += '<td data-uom="' + item.Uom + '">' + item.UOMType + '</td>'; // UOM
+            newRowHtml += '<td data-qty="' + item.Quantity + '">' + item.Quantity + '</td>'; // Quantity
+            newRowHtml += '<td data-rate="' + item.Rate + '">' + item.Rate + '</td>'; // Rate
+            //newRowHtml += '<td data-tax="' + item.GSTRateID + '" data-gst="' + item.GSTType + '">' + item.GSTType + '</td>'; // Tax
+            newRowHtml += '<td data-tax="' + item.GSTRateID + '" data-gst="' + item.CGST_Rate + '">' + taxString + '</td>'; // Tax
+
+            newRowHtml += '<td data-rowTotal="' + item.Total + '">' + item.Total + '</td>'; // Total
+            newRowHtml += '</tr>';
+
+            // Append the new row to the child table
+            $('#childTableBody').append(newRowHtml);
+        });
+
+
+        ShowHideAddress(viewModel.Challan.CustomerID);
+
+        recalculateTotals();
+
+        //clearDropdownTextboxes();
+    };
+    */
+    //>> EditChallan Function Ends
+   
+    SetupFormValidation();
 
     document.getElementById("customerID").addEventListener('change', ShowHideAddress);
+    document.getElementById("discount").addEventListener('change', recalculateTotals);
 
-    // Date issued 
-    flatpickr("#issuedDate", {});
 
-    // Due date 
-    flatpickr("#dueDate", {});
+    flatpickr("#invoiceDate", {});  //invoice date
+    flatpickr("#dueDate", {});      //due date
+    flatpickr("#issuedDate", {});   //challan date
+    flatpickr("#poDate", {});       //po date
+
 
     //Disable Billing and Shipping controls
     var myRow = document.getElementById("addressRow");
@@ -576,6 +1247,7 @@ $(document).ready(function () {
             if (value > minValue) {
                 value = Number(element.parentElement.childNodes[3].value) - 1;
                 element.parentElement.childNodes[3].value = value;
+                CalculateRowTotal();
             }
         }
     });
@@ -584,14 +1256,141 @@ $(document).ready(function () {
             if (value < maxValue) {
                 value = Number(element.parentElement.childNodes[3].value) + 1;
                 element.parentElement.childNodes[3].value = value;
+                CalculateRowTotal();
             }
         }
     });
 
-    document.getElementById("addInvDetailRow").addEventListener("click", function () {
-        //addRow();
-        addBlankRow();
+    document.getElementById("qty").addEventListener('change', CalculateRowTotal);
+    document.getElementById("rate").addEventListener('change', CalculateRowTotal);
+
+  
+
+    let itemChoicesArray = [
+        //{ value: 0, label: ' Select Product ' },
+        //{ value: 48, label: 'Box Printing - 911' },
+        //{ value: 51, label: 'A/5 PAMPHLET PRINT- 8443' },
+        //{ value: 191, label: 'SMART CARD PRINT - 555' },
+        //{ value: 123, label: 'C.S PLOTTER - 480255' },
+        // Add additional options here if needed
+    ];
+
+    itemDropdown = new Choices(document.getElementById('itemId1'), { choices: itemChoicesArray, shouldSort: false, itemSelectText: '' });
+    uomDropdown = new Choices(document.getElementById('uom'), { shouldSort: false, itemSelectText: '' });
+    taxDropdown = new Choices(document.getElementById('taxType'), { shouldSort: false, itemSelectText: '' });
+
+    setupProductDetailValidationRules();
+
+    clearDropdownTextboxes();
+
+    document.getElementById("editRow").disabled = true;
+    document.getElementById("deleteRow").disabled = true;
+
+});
+
+
+function setupProductDetailValidationRules() {
+
+    jQuery.validator.addMethod("choiceValidation", function (value, element) {
+
+        if (value == null || value == undefined || value == '' || value == '0') {
+            return false;
+        }
+        else {
+            return true;
+        }
+
+    }, '');
+}
+
+
+function validateProductDetails() {
+
+
+    // Validate each input field individually
+    var displayError = false;
+    $("#productValidationError").empty();
+
+    $.each(validationRules, function (field, rules) {
+        var value = $("#" + field).val();
+        var errorMessage = "";
+
+        // Check each validation rule
+        $.each(rules, function (rule, ruleValue) {
+            if (rule === "required" && ruleValue && !value) {
+                errorMessage = validationMessages[field][rule];
+            } else if (rule === "maxlength" && value.length > ruleValue) {
+                errorMessage = validationMessages[field][rule];
+            } else if (rule === "email" && !isValidEmail(value)) {
+                errorMessage = validationMessages[field][rule];
+            }
+            else if (rule === "choiceValidation" && ruleValue && !isValidChoiceDropdown(value)) {
+                errorMessage = validationMessages[field][rule];
+            }
+        });
+
+        //Display error message if validation fails
+        if (errorMessage) {
+            //$("#" + field).after("<div class='invalid-form-control'>" + errorMessage + "</div>");
+            $("#productValidationError").append("" + errorMessage + "<br>");
+            displayError = true;
+        }
+
     });
 
-      //* QTY spinner END */
-});
+    return !displayError;
+}
+
+
+function isValidChoiceDropdown(value) {
+    if (value == null || value == undefined || value == '' || value == '0' || value == 0) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+var validationRules = {
+    itemId1: {
+        choiceValidation: true
+    },
+    uom: {
+        choiceValidation: true
+    },
+    qty: {
+        choiceValidation: true,
+        required: true,
+        digits: true
+    },
+    rate: {
+        choiceValidation: true,
+        required: true,
+        number: true
+    },
+    taxType: {
+        choiceValidation: true
+    }
+};
+
+var validationMessages = {
+    itemId1: {
+        choiceValidation: "Please select a valid value for Product"
+    },
+    uom: {
+        choiceValidation: "Please select a valid value for UOM"
+    },
+    qty: {
+        choiceValidation: "Please enter valid quantity",
+        required: "Please enter quantity",
+        digits: "Please enter a numeric value"
+    },
+    rate: {
+        choiceValidation: "Please enter valid rate",
+        required: "Please enter rate",
+        number: "Please enter a numeric value"
+    },
+    taxType: {
+        choiceValidation: "Please select a valid value for GST Type"
+    },
+};

@@ -1,0 +1,143 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Dictionary<string, string> data = ViewBag.Resources;
+    //var pageTitle = data[ResourceKeyEnum.AR_CUSTOMER_CREATE_PAGETITLE.ToString()];
+    //ViewBag.Title = pageTitle;
+
+    ViewBag.Title = ViewBag.Resources["ITEM_CREATE_PAGETITLE"];
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="d-md-flex d-block align-items-center justify-content-between my-2 page-header-breadcrumb">
+    <h1 class="page-title fw-semibold fs-18 mb-0">@ViewBag.Title</h1>
+
+</div>
+<!-- Page Header Close -->
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-body add-item p-0">
+                <div class="p-2">
+                    <div class="row gx-5">
+
+                        <form id="frmItem" name="frmItem" class="needs-validation" action="" method="post" novalidate>
+                            <div class="row">
+                                <div class="col-xl-9">
+                                    <div class="card custom-card">
+
+                                        @* <div class="card-body"> *@
+                                        <div class="row gy-2 gx-3 align-items-center mb-2">
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8">
+                                                <label for="itemname" class="form-label">Item Name</label>
+                                                <input type="text" class="form-control" id="itemname" name="itemname" placeholder="Item Name" maxlength="200" value="">
+                                            </div>
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                                                <label for="hsnno" class="form-label">HSN No</label>
+                                                <input type="text" class="form-control" id="hsnno" name="hsnno" placeholder="HSNNo" maxlength="10" required>
+                                            </div>
+
+                                        </div>
+                                        <div class="row gy-2 gx-3 align-items-center mb-2">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                                                <label for="rate" class="form-label">Rate</label>
+                                                <input class="form-control" id="rate" name="rate" placeholder="Rate" type="number" min="0" value="" pattern="^\d+(?:\.\d{1,2})?$" required>
+                                            </div>
+                                            @* <div class="input-group border rounded flex-sm-nowrap align-items-center">
+                                                <input class="form-control form-control-sm text-center w-100 h-75 ri-align-vertically" aria-label="quantity" id="qty" name="qty" type="number" min="0" value="">
+                                            </div> *@
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 choices-control">
+                                                <label for="uom" class="form-label">UOM</label>
+                                                <select class="form-select" id="uom" name="uom" asp-items="@ViewBag.UOMTypes as List<SelectListItem>" required>
+                                                    <option selected disabled value="">Select UOM</option>
+                                                    <option value="1">Kg</option>
+                                                    <option value="2">Ltr</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 choices-control">
+                                                <label for="category" class="form-label">Category</label>
+                                                <select class="form-select" name="category" id="category" required>
+                                                    <option selected disabled value="">Select Category</option>
+                                                    @* <option value="0">Select Category</option> *@
+                                                    <option value="1">Xerox Paper</option>
+                                                    <option value="2">Crayons</option>
+                                                    <option value="3">Pen</option>
+                                                    <option value="4">Folders</option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                        <div class="row gy-2 gx-3 align-items-center mb-2">
+
+                                            <div class="p-1 border-top border-block-top-dashed bold" >
+                                                <div class="row gy-2 gx-3 align-items-center mb-2">
+
+                                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                                                        <label for="cgst" class="form-label">CGST %</label>
+                                                        <input class="form-control" id="cgst" name="cgst" placeholder="CGST" type="number" min="0" max="100" value="" required>
+                                                    </div>
+                                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                                                        <label for="sgst" class="form-label">SGST %</label>
+                                                        <input class="form-control" id="sgst" name="sgst" placeholder="SGST" type="number" min="0" max="100" value="" required>
+                                                    </div>
+                                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                                                        <label for="igst" class="form-label">IGST %</label>
+                                                        <input class="form-control" id="igst" name="igst" placeholder="IGST" type="number" min="0" max="100" value="" required>
+                                                    </div>
+                                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                                                        <label for="cess" class="form-label">CESS %</label>
+                                                        <input class="form-control" id="cess" name="cess" placeholder="CESS" type="number" min="0" max="100" value="" >
+                                                    </div>
+
+                                                    @*  <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 choices-control">
+                                                        <label for="paymentTerms" class="form-label">Payment Terms</label>
+                                                        <select class="form-select" name="paymentTerms" id="paymentTerms">
+                                                            <option value="1">NET 15</option>
+                                                            <option value="2">NET 30</option>
+                                                            <option value="3">NET 45</option>
+                                                            <option value="4">NET 60</option>
+                                                        </select>
+                                                    </div> *@
+                                                </div>
+                                            </div>
+                                            @* <div class="p-1 border-top border-block-top-dashed">
+                                                <div class="row gy-2 gx-3 align-items-center mb-2">
+                                                    <div class="col-xl-8">
+                                                        <label for="remarks" class="form-label">Remarks :</label>
+                                                        <textarea class="form-control" id="remarks" name="remarks" rows="4"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div> *@
+                                        </div>
+                                        @* </div> /* card body *@
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="px-4 py-3 border-top border-block-start-dashed d-sm-flex justify-content-end">
+                            <button class="btn btn-primary me-md-2 btn-wave" type="button">Reset</button>
+                            @* <button type="button" id="saveItem" name="saveItem" class="btn btn-primary btn-wave">Save Item</button> *@
+                            <button class="btn btn-primary" id="saveItem" name="saveItem">Save Item <i class="ms-1 align-middle ri-send-plane-1-line  d-inline-block"></i></button>
+                            <input type="hidden" id="itemId" name="itemId" value="0" />
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .button-container {
+        margin-top: 20px;
+    }
+</style>
+
+
+@section Scripts {
+    <script src="~/bs/js/item.js" asp-append-version="true"></script>
+}

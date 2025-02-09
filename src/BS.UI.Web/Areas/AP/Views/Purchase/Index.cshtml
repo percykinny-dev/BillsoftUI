@@ -1,0 +1,84 @@
+﻿@{
+    Dictionary<string, string> data = ViewBag.Resources;
+
+    ViewBag.Title = ViewBag.Resources["AP_PURCHASE_INDEX_PAGETITLE"];
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="d-md-flex d-block align-items-center justify-content-between my-2 page-header-breadcrumb">
+    <h1 class="page-title fw-semibold fs-18 mb-0">@ViewBag.Title</h1>
+</div>
+<!-- Page Header Close -->
+
+<div class="card custom-card">
+    <div class="card-header d-flex justify-content-end align-items-center w-100">
+        <div class="form-group mb-0 me-3">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <label for="status" class="form-label mb-0">Status:</label>
+                </div>
+                <div class="col-auto">
+                    <select id="status" name="status"
+                            class="form-select" style="width:max-content;">
+                        <option value="active">Active</option>
+                        <option value="archive">Archive</option>
+                        <option value="all">All</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-wave" onclick="window.location='@Url.Action("PurchaseAddEdit", "Purchase")'">Add Purchase</button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="responsiveDataTable" class="table text-nowrap table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        @* BillNo, BillDate,VendorID,NetAmount,CGSTAmount,SGSTAmount,IGSTAmount,TotalAmount *@
+                        <th scope="col">Bill#</th>
+                        <th scope="col">Bill Date</th>
+                        <th scope="col">Vendor Name</th>
+                        <th scope="col">Net Amt</th>
+                        <th scope="col">CGST Amt</th>
+                        <th scope="col">SGST Amt</th>
+                        <th scope="col">IGST Amt</th>
+                        <th scope="col">GST Amt</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Internal Datatables JS -->
+@* <script src="~/bs/js/datatables.js"></script> *@
+
+<style>
+    /*.card-header {
+                                background-color: lightgray;
+                            }*/
+
+    .table-header {
+        background-color: var(--default-body-bg-color);
+    }
+
+    .custom-header-control {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Add spacing between elements if needed */
+    .form-label, .form-select, .btn {
+        margin-right: 10px; /* Adjust the margin as needed */
+    }
+</style>
+
+@section Scripts {
+    <script src="~/bs/js/ap_purchaselist.js" asp-append-version="true"></script>
+}

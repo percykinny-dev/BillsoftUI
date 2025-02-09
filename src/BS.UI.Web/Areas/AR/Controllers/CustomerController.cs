@@ -60,6 +60,9 @@ namespace BS.UI.Web.Controllers
             QueryFilter queryFilter = new QueryFilter();
             queryFilter.PageNumber = page;
             queryFilter.PageSize = pageSize;
+            queryFilter.SearchText = Request.Form["search[value]"];
+            queryFilter.SortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"];
+            
             var customers = await customerService.GetCustomers(BSCompanyId, queryFilter, null);
 
             int totalRecords = queryFilter.RecordCount; // Total records in the database

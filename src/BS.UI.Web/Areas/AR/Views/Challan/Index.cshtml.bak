@@ -1,0 +1,163 @@
+﻿@{
+    Dictionary<string, string> data = ViewBag.Resources;
+    //var pageTitle = data[ResourceKeyEnum.AR_CUSTOMER_INDEX_PAGETITLE.ToString()];
+    //ViewBag.Title = pageTitle;
+    ViewBag.Title = ViewBag.Resources["AR_CHALLAN_INDEX_PAGETITLE"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="d-md-flex d-block align-items-center justify-content-between my-2 page-header-breadcrumb">
+    <h1 class="page-title fw-semibold fs-18 mb-0">@ViewBag.Title</h1>
+</div>
+<!-- Page Header Close -->
+<div class="card custom-card">
+    <div class="card-header d-flex justify-content-end align-items-center w-100">
+        <div class="form-group mb-0 me-3">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <label for="status" class="form-label mb-0">Status:</label>
+                </div>
+                <div class="col-auto">
+                    <select class="form-select" style="width:max-content;" id="status">
+                        <option value="ac">Active</option>
+                        <option value="in">InActive</option>
+                        <option value="all">All</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-wave" onclick="window.location='@Url.Action("ChallanAddEdit", "Challan")'">Add Challan</button>
+        <button type="button" class="btn btn-sm btn-icon btn-primary-light" onclick="ShowSearchModal();"><i class="bi bi-card-list" title="Advanced Search"></i></button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="responsiveDataTable" class="table text-nowrap table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th scope="col">Challan#</th>
+                        @* <th scope="col" style="visibility: hidden;">ChallanID</th> *@
+                        <th scope="col">Challan Date</th>
+                        <th scope="col">Customer Name</th>
+                        <th scope="col">Net Amt</th>
+                        <th scope="col">CGST Amt</th>
+                        <th scope="col">SGST Amt</th>
+                        <th scope="col">IGST Amt</th>
+                        <th scope="col">GST Amt</th>
+                        <th scope="col">Total</th>
+                        @*<th scope="col">
+                            <p class="form-label mb-2 mt-2">
+                                Action
+                                <button type="button" class="btn btn-sm btn-icon btn-primary-light" onclick="ShowSearchModal();"><i class="bi bi-card-list" title="choose an address"></i></button>
+                            </p>
+                        </th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="challanSearchModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchTitle">Search:</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <label for="billContactName" class="form-label">Contact Name</label>
+                                <input type="text" class="form-control" id="billContactName" name="billContactName" placeholder="Contact Name">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="billAddress1" class="form-label">Address Line #1</label>
+                                <input type="text" class="form-control" id="billAddress1" name="billAddress1" placeholder="Address Line #1">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <label for="billAddress2" class="form-label">Address Line #2</label>
+                                <input type="text" class="form-control" id="billAddress2" name="billAddress2" placeholder="Address Line #2">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="billCity" class="form-label">City</label>
+                                <input type="text" class="form-control" id="billCity" name="billCity" placeholder="City">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <label for="billState" class="form-label">Bill State</label>
+                                <select class="form-control" data-trigger name="billState" id="billState" single>
+                                    <option value="">Select</option>
+                                    <option value="AP">Andhra Pradesh</option>
+                                    <option value="BR">Bihar</option>
+                                    <option value="MP">Madhya Pradesh</option>
+                                    <option value="MH">Maharashtra</option>
+                                    <option value="MN">Manipur</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="billZipcode" class="form-label">ZipCode</label>
+                                <input type="text" class="form-control" id="billZipcode" name="billZipcode" placeholder="ZipCode">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <label for="billWorkPhone" class="form-label">Work Phone</label>
+                                <input type="tel" class="form-control" id="billWorkPhone" name="billWorkPhone" placeholder="+123-456-7890">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="billWhatsappPhone" class="form-label">WhatsApp Phone</label>
+                                <input type="tel" class="form-control" id="billWhatsappPhone" name="billWhatsappPhone" placeholder="+123-456-7890">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button id="ember3334" class="btn btn-primary" type="submit">
+                        <!----> Search
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Internal Datatables JS -->
+@* <script src="~/bs/js/datatables.js"></script> *@
+<!-- Internal Datatables JS -->
+<script src="~/bs/js/datatables.js"></script>
+<style>
+    .custom-card-header {
+        background-color: #a3aed1 !important;
+    }
+
+    .table-header {
+        background-color: var(--default-body-bg-color);
+    }
+
+    .custom-header-control {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Add spacing between elements if needed */
+    .form-label, .form-select, .btn {
+        margin-right: 10px; /* Adjust the margin as needed */
+    }
+
+</style>
+
+@section Scripts {
+    <script src="~/bs/js/ar_challanlist.js" asp-append-version="true"></script>
+    
+}

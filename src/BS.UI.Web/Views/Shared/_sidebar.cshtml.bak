@@ -1,0 +1,484 @@
+﻿<!-- Start::app-sidebar -->
+<aside class="app-sidebar sticky" id="sidebar">
+
+    <!-- Start::main-sidebar-header -->
+    <div class="main-sidebar-header">
+        <a href="~/html/index.html" class="header-logo">
+            <img src="~/bs/images/brand-logos/desktop-logo.png" alt="logo" class="desktop-logo">
+            <img src="~/bs/images/brand-logos/toggle-logo.png" alt="logo" class="toggle-logo">
+            <img src="~/bs/images/brand-logos/desktop-dark.png" alt="logo" class="desktop-dark">
+            <img src="~/bs/images/brand-logos/toggle-dark.png" alt="logo" class="toggle-dark">
+            <img src="~/bs/images/brand-logos/desktop-white.png" alt="logo" class="desktop-white">
+            <img src="~/bs/images/brand-logos/toggle-white.png" alt="logo" class="toggle-white">
+        </a>
+    </div>
+    <!-- End::main-sidebar-header -->
+    <!-- Start::main-sidebar -->
+    <div class="main-sidebar" id="sidebar-scroll">
+
+        <!-- Start::nav -->
+        <nav class="main-menu-container nav nav-pills flex-column sub-open">
+            <div class="slide-left" id="slide-left">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24" height="24" viewBox="0 0 24 24"> <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path> </svg>
+            </div>
+            <ul class="main-menu">
+                <!-- Start::slide__category -->
+                <li class="slide__category"><span class="category-name">Main</span></li>
+                <!-- End::slide__category -->
+                <!-- Start::slide -->
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="bx bx-home side-menu__icon"></i>
+                        <span class="side-menu__label">Dashboards<span class="badge bg-warning-transparent ms-2">12</span></span>
+                        <i class="fe fe-chevron-right side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="~/html/javascript:void(0)">Dashboards</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/index.html" class="side-menu__item">CRM</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/index-1.html" class="side-menu__item">Ecommerce</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/index-2.html" class="side-menu__item">Crypto</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/index-3.html" class="side-menu__item">Jobs</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/index-4.html" class="side-menu__item">NFT</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/index-5.html" class="side-menu__item">Sales</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/index-6.html" class="side-menu__item">Analytics</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/index-7.html" class="side-menu__item">Projects</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/index-8.html" class="side-menu__item">HRM</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/index-9.html" class="side-menu__item">Stocks</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/index-10.html" class="side-menu__item">Courses</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/index-11.html" class="side-menu__item">Personal</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="slide__category"><span class="category-name">Master</span></li>
+                <li class="slide">
+                    <a href=" @Url.Action("Index", "Item", new { area = "AR" })" class="side-menu__item">
+                    //<a href="~/html/widgets.html" class="side-menu__item">
+                        <i class="bx bx-gift side-menu__icon"></i>
+                        <span class="side-menu__label">Items<span class="badge bg-danger-transparent ms-2">Hot</span></span>
+                    </a>
+                </li>
+                <li class="slide">
+                    <a href="@Url.Action("Index", "Customer", new { area = "AR" })" class="side-menu__item">
+                        <i class="bx bx-gift side-menu__icon"></i>
+                        <span class="side-menu__label">Customers</span>
+                    </a>
+                </li>
+                <li class="slide">
+                    <a href="~/html/widgets.html" class="side-menu__item">
+                        <i class="bx bx-gift side-menu__icon"></i>
+                        <span class="side-menu__label">Vendors</span>
+                    </a>
+                </li>
+                <!-- End::slide -->
+                <!-- Start::slide -->
+                <li class="slide__category"><span class="category-name">Transactions</span></li>
+                <li class="slide">
+                    <a href="@Url.Action("Index", "Challan", new { area = "AR" })" class="side-menu__item">
+                        <i class="bx bx-gift side-menu__icon"></i>
+                        <span class="side-menu__label">Challans</span>
+                    </a>
+                </li>
+                <li class="slide">
+                    <a href="@Url.Action("Index", "Invoice", new { area = "AR" })" class="side-menu__item">
+                        <i class="bx bx-gift side-menu__icon"></i>
+                        <span class="side-menu__label">Invoices</span>
+                    </a>
+                </li>
+                <li class="slide">
+                    <a href="~/html/widgets.html" class="side-menu__item">
+                        <i class="bx bx-gift side-menu__icon"></i>
+                        <span class="side-menu__label">Proforma Invoices</span>
+                    </a>
+                </li>
+                <li class="slide">
+                    <a href="@Url.Action("Index", "Purchase", new { area = "AP" })" class="side-menu__item">
+                        <i class="bx bx-gift side-menu__icon"></i>
+                        <span class="side-menu__label">Purchases</span>
+                    </a>
+                </li>
+                <li class="slide">
+                    <a href="@Url.Action("Index", "Quotation", new { area = "AP" })" class="side-menu__item">
+                        <i class="bx bx-gift side-menu__icon"></i>
+                        <span class="side-menu__label">Quotations</span>
+                    </a>
+                </li>
+                <li class="slide">
+                    <a href="~/html/widgets.html" class="side-menu__item">
+                        <i class="bx bx-gift side-menu__icon"></i>
+                        <span class="side-menu__label">Credit Notes</span>
+                    </a>
+                </li>
+                <li class="slide__category"><span class="category-name">Reports</span></li>
+                <!-- End::slide -->
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="bx bx-file-blank side-menu__icon"></i>
+                        <span class="side-menu__label">Outstanding Reports</span>
+                        <i class="fe fe-chevron-right side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="~/html/javascript:void(0)">Outstanding Reports</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/about-us.html" class="side-menu__item">General</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/about-us.html" class="side-menu__item">Letter</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/about-us.html" class="side-menu__item">Summary</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/coming-soon.html" class="side-menu__item">Coming Soon</a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Start::slide__category PAGES -->
+                <li class="slide__category"><span class="category-name">Pages</span></li>
+                <!-- End::slide__category -->
+                <!-- Start::slide -->
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="bx bx-file-blank side-menu__icon"></i>
+                        <span class="side-menu__label">Pages<span class="badge bg-secondary-transparent ms-2">New</span></span>
+                        <i class="fe fe-chevron-right side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="~/html/javascript:void(0)">Pages</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/about-us.html" class="side-menu__item">About Us</a>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                Blog
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="~/html/blog.html" class="side-menu__item">Blog</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/blog-details.html" class="side-menu__item">Blog Details</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/blog-create.html" class="side-menu__item">Create Blog</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/chat.html" class="side-menu__item">Chat</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/contacts.html" class="side-menu__item">Contacts</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/contact-us.html" class="side-menu__item">Contact Us</a>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                Ecommerce
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="~/html/add-products.html" class="side-menu__item">Add Products</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/cart.html" class="side-menu__item">Cart</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/checkout.html" class="side-menu__item">Checkout</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/edit-products.html" class="side-menu__item">Edit Products</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/order-details.html" class="side-menu__item">Order Details</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/orders.html" class="side-menu__item">Orders</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/products.html" class="side-menu__item">Products</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/product-details.html" class="side-menu__item">Product Details</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/products-list.html" class="side-menu__item">Products List</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/wishlist.html" class="side-menu__item">Wishlist</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                Email
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="~/html/mail.html" class="side-menu__item">Mail App</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/mail-settings.html" class="side-menu__item">Mail Settings</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/empty.html" class="side-menu__item">Empty</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/faq's.html" class="side-menu__item">FAQ's</a>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                File Manager
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="~/html/file-manager.html" class="side-menu__item">File Manager</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                Invoice
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="~/html/invoice-create.html" class="side-menu__item">Create Invoice</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/invoice-details.html" class="side-menu__item">Invoice Details</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/invoice-list.html" class="side-menu__item">Invoice List</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/landing.html" class="side-menu__item">Landing</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/landing-jobs.html" class="side-menu__item">Jobs Landing<span class="badge bg-secondary-transparent ms-2">New</span></a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/notifications.html" class="side-menu__item">Notifications</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/pricing.html" class="side-menu__item">Pricing</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/profile.html" class="side-menu__item">Profile</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/reviews.html" class="side-menu__item">Reviews</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/team.html" class="side-menu__item">Team</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/terms_conditions.html" class="side-menu__item">Terms & Conditions</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/timeline.html" class="side-menu__item">Timeline</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/to-do-list.html" class="side-menu__item">To Do List</a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- End::slide -->
+                <!-- Start::slide -->
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="bx bx-task side-menu__icon"></i>
+                        <span class="side-menu__label">Task<span class="badge bg-secondary-transparent ms-2">New</span></span>
+                        <i class="fe fe-chevron-right side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="~/html/javascript:void(0)">Error</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/task-kanban-board.html" class="side-menu__item">Kanban Board</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/task-list-view.html" class="side-menu__item">List View</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/task-details.html" class="side-menu__item">Task Details</a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- End::slide -->
+                <!-- Start::slide -->
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="bx bx-fingerprint side-menu__icon"></i>
+                        <span class="side-menu__label">Authentication</span>
+                        <i class="fe fe-chevron-right side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="~/html/javascript:void(0)">Authentication</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/coming-soon.html" class="side-menu__item">Coming Soon</a>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                Create Password
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="~/html/create-password-basic.html" class="side-menu__item">Basic</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/create-password-cover.html" class="side-menu__item">Cover</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                Lock Screen
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="~/html/lockscreen-basic.html" class="side-menu__item">Basic</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/lockscreen-cover.html" class="side-menu__item">Cover</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                Reset Password
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="~/html/reset-password-basic.html" class="side-menu__item">Basic</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/reset-password-cover.html" class="side-menu__item">Cover</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                Sign Up
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="~/html/sign-up-basic.html" class="side-menu__item">Basic</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/sign-up-cover.html" class="side-menu__item">Cover</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                Sign In
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="~/html/sign-in-basic.html" class="side-menu__item">Basic</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/sign-in-cover.html" class="side-menu__item">Cover</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                Two Step Verification
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="~/html/two-step-verification-basic.html" class="side-menu__item">Basic</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="~/html/two-step-verification-cover.html" class="side-menu__item">Cover</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/under-maintenance.html" class="side-menu__item">Under Maintenance</a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- End::slide -->
+                <!-- Start::slide -->
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="bx bx-error side-menu__icon"></i>
+                        <span class="side-menu__label">Error</span>
+                        <i class="fe fe-chevron-right side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="~/html/javascript:void(0)">Error</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/401-error.html" class="side-menu__item">401 - Error</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/404-error.html" class="side-menu__item">404 - Error</a>
+                        </li>
+                        <li class="slide">
+                            <a href="~/html/500-error.html" class="side-menu__item">500 - Error</a>
+                        </li>
+                    </ul>
+                </li>
+
+                
+            </ul>
+            <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24" height="24" viewBox="0 0 24 24"> <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path> </svg></div>
+        </nav>
+        <!-- End::nav -->
+
+    </div>
+    <!-- End::main-sidebar -->
+
+</aside>
+<!-- End::app-sidebar -->

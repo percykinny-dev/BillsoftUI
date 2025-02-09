@@ -1,26 +1,17 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model BS.Application.ViewModels.AR.ARChallanDetailVM
+@using Newtonsoft.Json
 @{
     Dictionary<string, string> data = ViewBag.Resources;
-    //var pageTitle = data[ResourceKeyEnum.AR_CUSTOMER_CREATE_PAGETITLE.ToString()];
-    //ViewBag.Title = pageTitle;
 
-    ViewBag.Title = ViewBag.Resources["AR_CHALLAN_CREATE_PAGETITLE"];
-
-    //Check if ViewBag.Resources is not null and contains the required key
-    //if (ViewBag.Resources != null && ViewBag.Resources.ContainsKey(ResourceKeyEnum.AR_CUSTOMER_CREATE_PAGETITLE))
-    //{
-    //    ViewBag.Title = ViewBag.Resources[ResourceKeyEnum.AR_CUSTOMER_CREATE_PAGETITLE.ToString()];
-    //}
-    //else
-    //{
-    //    // Set a default title if the key is not found
-    //    ViewBag.Title = "Default Page Title";
-    //}
-
-    //var customerList = Model.SharedLists.Customers;
-    //var itemList = Model.SharedLists.Items;
-
+    if (Model.Challan == null)
+    {
+        ViewBag.Title = ViewBag.Resources["AR_CHALLAN_CREATE_PAGETITLE"] + " - Add";
+    }
+    else
+    {
+        ViewBag.Title = ViewBag.Resources["AR_CHALLAN_CREATE_PAGETITLE"] + " - Edit/Delete";
+    }
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -49,7 +40,7 @@
                                     <div class="card custom-card">
                                         <div class="card-header d-flex justify-content-between w-100">
                                             <div class="col-xl-6 col-lg-4 col-md-4">
-                                                <select class="form-control" data-trigger name="customerID" id="customerID" asp-items="@ViewBag.Customers as List<SelectListItem>">
+                                                <select class="form-control" data-trigger name="CustomerID" id="CustomerID" asp-items="@ViewBag.Customers as List<SelectListItem>">
                                                     <option value="">Select Customer</option>
                                                 </select>
                                             </div>
@@ -112,30 +103,35 @@
                                                     </div>
                                                 </div>
                                                 <div class="d-flex fs-12 mt-3 form-control form-control-light">
-
-                                                    <div class="col-xl-4 me-2 choices-control">
+                                                    @*  <div class="col-xl-4 me-2 choices-control">
                                                         <label for="currency" class="form-label">Currency</label>
                                                         <select class="form-control" data-trigger name="currency" id="currency">
                                                             <option value="">Select Currency</option>
                                                             <option value="USD">USD - (United States Dollar)</option>
                                                             <option value="INR">₹ - (Indian Ruppee)</option>
                                                         </select>
+                                                    </div> *@
+                                                    <div class="col-xl-4 me-2 choices-control">
+                                                        <label for="currency" class="form-label">Currency</label>
+                                                        <select class="form-control-sm form-select-sm" id="currency" name="currency" asp-items="@ViewBag.Currencies as List<SelectListItem>">
+                                                            <option value="">Select Currency</option>
+                                                        </select>
                                                     </div>
                                                     <div class="col-xl-8">
                                                         <label for="Note" class="form-label">Note</label>
                                                         <input type="text" class="form-control form-control-light" id="note" name="note" placeholder="Notes">
                                                     </div>
-
                                                 </div>
+
                                                 <div class="col-xl-3">
                                                     <div class="row">
                                                         <div class="col-xl-6">
-                                                            <label for="challanNo" class="form-label">Challan No.</label>
-                                                            <input type="text" class="form-control" id="challanNo" name="challanNo" placeholder="Challan No." value="">
+                                                            <label for="ChallanNo" class="form-label">Challan No.</label>
+                                                            <input type="text" class="form-control" id="ChallanNo" name="ChallanNo" placeholder="Challan No." value="">
                                                         </div>
                                                         <div class="col-xl-6">
                                                             <label for="finYear" class="form-label">Fin Year</label>
-                                                            <input type="text" class="form-control form-control-light" id="finYear" name="finYear" value="2023-24" disabled>
+                                                            <input type="text" class="form-control form-control-light" id="finYear" name="finYear" value="2025" disabled>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -152,7 +148,7 @@
                                                     <input type="text" class="form-control form-control-light" id="poDate" name="poDate" placeholder="Choose date">
                                                 </div>
 
-                                                <div class="col-xl-12">
+                                                <div class="col-xl-12" id="productDetailDiv">
                                                     <partial name="_productDetail" />
                                                 </div>
                                                 @*<div class="col-xl-12">
@@ -162,8 +158,10 @@
                                         </div>
                                         <div class="card-footer text-end">
                                             @*<button class="btn btn-light me-1"><i class="ri-eye-line me-1 align-middle d-inline-block"></i>Preview</button>*@
+                                            <button class="btn btn-primary" id="deleteChallan" name="deleteChallan" hidden="hidden">Confirm Delete<i class="ms-1 align-middle ri-send-plane-1-line  d-inline-block"></i></button>
                                             <button class="btn btn-primary" id="saveChallan" name="saveChallan">Save Challan <i class="ms-1 align-middle ri-send-plane-1-line  d-inline-block"></i></button>
-                                            <input type="hidden" id="challanId" name="challanId" value="0" />
+                                            <input type="hidden" id="ChallanID" name="ChallanID" value="0" />
+                                            <input type="hidden" id="ActionVal" name="ActionVal" value="" />
                                         </div>
                                     </div>
                                 </div>
@@ -210,9 +208,9 @@
         z-index: 0;
     }
 </style>
-
-
-
 @section Scripts {
     <script src="~/bs/js/ar_challan.js" asp-append-version="true"></script>
 }
+<script type="text/javascript">
+    var viewModel = @Html.Raw(ViewBag.ViewModelJson);
+</script>

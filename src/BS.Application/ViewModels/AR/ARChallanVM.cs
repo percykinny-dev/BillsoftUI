@@ -1,24 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BS.Application.ViewModels.AR;
 
 public class ARChallanVM
 {
+
     public int ChallanID { get; set; }
-
     public string ChallanNo { get; set; }
-
     public string CustomerName { get; set; }
-
     public DateTime? ChallanDate { get; set; }
-
     public decimal NetAmount { get; set; }
     public decimal CGSTAmount { get; set; }
     public decimal SGSTAmount { get; set; }
     public decimal IGSTAmount { get; set; }
     public decimal GSTAmount { get; set; }
     public decimal TotalAmount { get; set; }
-
+    public string Currency { get; set; }
 
 }
 
@@ -102,7 +100,14 @@ public class ARChallanDataVM
 
     public string ShipGSTNo { get; set; }
 
+    public string FAYear { get; set; }
 
+    public string Description { get; set; }
+
+    public DateTime? PurchaseOrderDate { get; set; }
+    public string PurchaseOrderNo { get; set; }
+
+    public string Currency { get; set; }
 }
 
 public class ARChallanItemsVM
@@ -127,7 +132,6 @@ public class ARChallanItemsVM
     public decimal IGST { get; set; }
     public decimal IGSTAmount { get; set; }
     public decimal Total { get; set; }
-
     public int? InvoiceID { get; set; }
     public string FAYear { get; set; }
     public decimal Cess { get; set; }
@@ -142,5 +146,13 @@ public class ARChallanItemsVM
     public string ItemName { get; set; }
 
     public string UOMType { get; set; }
+
+    public string GSTType { get; set; }
+
+    public decimal CGST_Rate { get; set; }
+
+    public decimal SGST_Rate { get; set; }
+
+    public decimal IGST_Rate { get; set; }
 
 }

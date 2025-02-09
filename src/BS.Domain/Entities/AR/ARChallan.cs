@@ -9,6 +9,7 @@ public class ARChallan
     public byte StatusID { get; set; }
     public int CompanyID { get; set; }
     public int CustomerID { get; set; }
+    public string Currency { get; set; }
     public int? BillAddressID { get; set; }
     public int? ShipAddressID { get; set; }
     public decimal NetAmount { get; set; }

@@ -1,0 +1,22 @@
+﻿namespace Presentation.Web.Common
+{
+    public enum ResourceKeyEnum
+    {
+        AR_CUSTOMER_INDEX_PAGETITLE = 1,
+        AR_CUSTOMER_CREATE_PAGETITLE = 2,
+        AR_CUSTOMER_DETAIL_PAGETITLE = 3,
+
+        AR_INVOICE_INDEX_PAGETITLE = 4,
+        AR_INVOICE_CREATE_PAGETITLE = 5,
+        AR_INVOICE_DETAIL_PAGETITLE = 6,
+
+        AR_CHALLAN_INDEX_PAGETITLE = 7,
+        AR_CHALLAN_CREATE_PAGETITLE = 8,
+        AR_CHALLAN_DETAIL_PAGETITLE = 9,
+
+        //COMMON TO ALL MODULES
+        AR_CUSTOMER = 10000,
+        AP_VENDOR = 10001,
+
+    }
+}

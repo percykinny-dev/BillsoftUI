@@ -5,6 +5,17 @@ using BS.Domain.Exceptions;
 using BS.Infrastructure.Repositories.AR;
 using System.Security.Principal;
 
+using AspNetCoreHero.ToastNotification.Notyf;
+using BS.Domain.Entities.AR;
+using Microsoft.JSInterop;
+using Presentation.Web.Common;
+using System.Reflection.Emit;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Newtonsoft.Json;
+
+
+using BS.Application.Contracts.AP;
+using BS.Application.Services.AP;
 
 namespace BS.UI.Web.Controllers
 {
@@ -56,6 +67,9 @@ namespace BS.UI.Web.Controllers
             QueryFilter queryFilter = new QueryFilter();
             queryFilter.PageNumber = page;
             queryFilter.PageSize = pageSize;
+            queryFilter.SearchText = Request.Form["search[value]"];
+            queryFilter.SortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"];
+
             var challans = await challanService.GetChallansList(BSCompanyId, queryFilter, null);
 
             int totalRecords = queryFilter.RecordCount; // Total records in the database
@@ -65,7 +79,7 @@ namespace BS.UI.Web.Controllers
             // Convert the IEnumerable<ARCustomerVM> to a JSON array
             var jsonData = challans.Select(challan => new
             {
-                id = challan.ChallanID,
+                challanid = challan.ChallanID,
                 challanno = challan.ChallanNo,
                 challandate = challan.ChallanDate.Value.ToShortDateString(),
                 customername = challan.CustomerName,
@@ -93,20 +107,22 @@ namespace BS.UI.Web.Controllers
         }
 
         // GET: ChallanController/Detail/5
-        [Route("Detail")]
+        [Route("Detail/{id}")]
         public ActionResult Detail(int id)
         {
 
             return View();
         }
 
-        [Route("ChallanAddEdit/{challanId?}")]
+        [Route("ChallanAddEdit/{challanId:int?}")]
+        //[Route("ChallanAddEdit")]
         public async Task<ActionResult> ChallanAddEdit(int? challanId)
         {
             ViewBag.Resources = _resourceManager.GetResources();
             Guard.GreaterThan(0, BSCompanyId, nameof(BSCompanyId));
 
             var viewModel = new ARChallanDetailVM();
+            //var viewModel = new ARChallanDataVM();
             int? customerId = 0;
 
             if (challanId.HasValue)
@@ -123,13 +139,25 @@ namespace BS.UI.Web.Controllers
                 }
 
                 customerId = existingChallan.Challan.CustomerID;
-                // Populate the common properties with existing Challan details
-                //viewModel.ChallanId = existingChallan.Id;
-                //viewModel.CustomerId = existingChallan.CustomerId;
-                //viewModel.NetAmount = existingChallan.NetAmount;
-                //viewModel.TotalAmount = existingChallan.TotalAmount;
-                //viewModel.ChallanNo = existingChallan.ChallanNo;
+
+                viewModel.Challan = existingChallan.Challan;
+                viewModel.ChallanItems = existingChallan.ChallanItems.ToList();
+
+                //Populate the common properties with existing Challan details
+                //viewModel.Challan.ChallanID = existingChallan.Challan.ChallanID;
+                //viewModel.Challan.ChallanNo = existingChallan.Challan.ChallanNo;
+                //viewModel.Challan.CustomerID = existingChallan.Challan.CustomerID;
+                //viewModel.Challan.NetAmount = existingChallan.Challan.NetAmount;
+                //viewModel.Challan.TotalAmount = existingChallan.Challan.TotalAmount;
+                //viewModel.ChallanItems = existingChallan.ChallanItems?.ToList();
+
+                //var viewModelJson = JsonConvert.SerializeObject(viewModel);
+                //ViewBag.ViewModelJson = viewModelJson;
+
             }
+
+            var viewModelJson = JsonConvert.SerializeObject(viewModel);
+            ViewBag.ViewModelJson = viewModelJson;
 
             // Retrieve the shared lists of dropdown data required for the view
             viewModel.SharedLists = await challanService.GetSharedListsVM(BSCompanyId, customerId.Value);
@@ -141,6 +169,26 @@ namespace BS.UI.Web.Controllers
             return View(viewModel);
         }
 
+        [HttpPost]
+        [Route("DeleteChallan/{challanId:int?}")]
+        public async Task<ActionResult> DeleteChallan(int challanId)
+        {
+            try
+            {
+                //var result = await challanService.DeleteChallan(BSCompanyId, challanId);
+                _notifyService.Success("Challan deleted successfully");
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                var msg = "an error occurred while deleting Challan data";
+                LogException(msg, ex);
+                _notifyService.Warning(msg);
+                return Json(new { success = false });
+            }
+        }
+
+
         // POST: ChallanController/Create
         [HttpPost]
         [Route("SaveChallan")]
@@ -148,52 +196,87 @@ namespace BS.UI.Web.Controllers
         {
             try
             {
-
                 Guard.AgainstNull(challan, nameof(challan));
 
+                challan.CompanyID = BSCompanyId;
 
-                //challan.CompanyID = BSCompanyId;
-                //var result = await challanService.SaveChallan(challan, challanItems);
+                var result = await challanService.SaveChallan(challan, challanItems);
 
                 await Task.CompletedTask;
-                //if (!result.IsSuccess)
-                //    throw new BSInfrastructureException(result.Messages[0].IsNull() ? "error saving challan information" : result.Messages[0]);
+
+                if (!result.IsSuccess)
+                    throw new BSInfrastructureException(result.Messages[0].IsNull() ? "error saving challan information" : result.Messages[0]);
 
                 _notifyService.Success("Challan data saved successfully");
-                return Json(new { success = true, data = new { ChallanId = 101} });
-                //return Json(new { success = true, data = new { ChallanId = challan.ChallanID } });
+                //return Json(new { success = true, data = new { ChallanID = 101 } });
+                return Json(new { success = true, data = new { ChallanID = challan.ChallanID } });
             }
             catch (Exception ex)
             {
                 var msg = "an error occurred while saving Challan data";
                 LogException(msg, ex);
                 _notifyService.Warning(msg);
-                return Json(new { success = false, data = new { ChallanId = challan.ChallanID } });
+                return Json(new { success = false, data = new { ChallanID = challan.ChallanID } });
             }
         }
 
 
 
         // GET: ChallanController/Delete/5
-        public ActionResult Delete(int id)
+        //[HttpGet]
+        [Route("Delete/{challanId:int?}")]
+        public async Task<ActionResult> Delete(int? challanId)
+        //public ActionResult Delete(int? challanId)
         {
-            return View();
+            ViewBag.Resources = _resourceManager.GetResources();
+            Guard.GreaterThan(0, BSCompanyId, nameof(BSCompanyId));
+
+            var viewModel = new ARChallanDetailVM();
+            //var viewModel = new ARChallanDataVM();
+            int? customerId = 0;
+
+            if (challanId.HasValue)
+            {
+                // Fetch the existing Challan details from the database
+                var existingChallan = await challanService.GetChallanDetailVM(BSCompanyId, challanId.Value);
+
+                if (existingChallan == null)
+                {
+                    // Handle the case where the Challan with the given ID doesn't exist
+                    return NotFound();
+                }
+                customerId = existingChallan.Challan.CustomerID;
+                viewModel.Challan = existingChallan.Challan;
+                viewModel.ChallanItems = existingChallan.ChallanItems.ToList();
+
+            }
+
+            var viewModelJson = JsonConvert.SerializeObject(viewModel);
+            ViewBag.ViewModelJson = viewModelJson;
+
+            // Retrieve the shared lists of dropdown data required for the view
+            viewModel.SharedLists = await challanService.GetSharedListsVM(BSCompanyId, customerId.Value);
+
+            BindDropDowns(viewModel.SharedLists, viewModel.Challan);
+
+            // Pass the ViewModel to the view
+            return View(viewModel);
         }
 
         // POST: ChallanController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Delete(int challanId, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
         #region private methods
 
@@ -204,7 +287,7 @@ namespace BS.UI.Web.Controllers
             {
                 Text = $"{s.Code} - {s.Title}",
                 Value = s.CustomerID.ToString(),
-                Selected = s.CustomerID == challan?.CustomerID  
+                Selected = s.CustomerID == challan?.CustomerID
             }).ToList();
 
 
@@ -224,12 +307,17 @@ namespace BS.UI.Web.Controllers
             }).ToList();
 
             ViewBag.GSTTypes = data.GSTRateTypes
-           .Select(s => new SelectListItem()
-           {
-               Text = $"{s.RateDescription} [ {s.CGST_Rate.ToString()}% ]",
-               Value = s.GSTRateTypeID.ToString(),
-           }).ToList();
+              .Select(s => new SelectListItem()
+              {
+                  Text = $"{s.RateDescription} [ {s.CGST_Rate.ToString()}% ]",
+                  Value = s.GSTRateTypeID.ToString(),
+              }).ToList();
 
+            ViewBag.Currencies = new List<SelectListItem>
+            {
+            new SelectListItem { Text = "USD - (United States Dollar)", Value = "USD" },
+            new SelectListItem { Text = "₹ - (Indian Rupee)", Value = "INR" }
+            }.ToList();
 
         }
 

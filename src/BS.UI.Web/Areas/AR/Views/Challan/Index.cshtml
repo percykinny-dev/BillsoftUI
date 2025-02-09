@@ -36,13 +36,14 @@
                 <thead>
                     <tr>
                         <th scope="col">Challan#</th>
+                        @* <th scope="col" style="visibility: hidden;">ChallanID</th> *@
                         <th scope="col">Challan Date</th>
                         <th scope="col">Customer Name</th>
-                        <th scope="col">Net Amount</th>
-                        <th scope="col">CGST Amount</th>
-                        <th scope="col">SGST Amount</th>
-                        <th scope="col">IGST Amount</th>
-                        <th scope="col">GST Amount</th>
+                        <th scope="col">Net Amt</th>
+                        <th scope="col">CGST Amt</th>
+                        <th scope="col">SGST Amt</th>
+                        <th scope="col">IGST Amt</th>
+                        <th scope="col">GST Amt</th>
                         <th scope="col">Total</th>
                         @*<th scope="col">
                             <p class="form-label mb-2 mt-2">
@@ -53,7 +54,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                
                 </tbody>
             </table>
         </div>
@@ -156,6 +156,7 @@
 
 </style>
 
-@section Scripts{
+@section Scripts {
     <script src="~/bs/js/ar_challanlist.js" asp-append-version="true"></script>
+    
 }

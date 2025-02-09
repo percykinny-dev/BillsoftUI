@@ -1,0 +1,152 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="table-responsive">
+    <table class="table table-sm text-sm nowrap text-nowrap border mt-3">
+        <thead>
+            <tr>
+
+                <th class="col-3">Item / Product Name</th>
+                <th class="col-1">HSN No</th>
+                <th class="col-2">Uom</th>
+                <th class="col-1">Qty</th>
+                <th class="col-1">Rate</th>
+                <th class="col-2">Tax %</th>
+                <th class="col-1">Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="invoiceTableBody">
+            <tr id="itemRow1">
+                <td>
+                    <select class="form-control-sm form-select-sm" name="itemId1" id="itemId1" asp-items="@ViewBag.Products as List<SelectListItem>">
+                        <option value="0">Select Product</option>
+                    </select>
+                </td>
+                <td><input class="form-control form-control-sm form-control-light" id="hsnNo" name="hsnNo" type="text" value=""></td>
+                <td>
+                    <select class="form-control-sm form-select-sm" id="uom" name="uom" asp-items="@ViewBag.UOMTypes as List<SelectListItem>">
+                        <option value="0">Select UOM</option>
+                    </select>
+                </td>
+                <td class="invoice-quantity-container col-1">
+                    <div class="input-group border rounded flex-sm-nowrap align-items-center">
+                        @* <button type="button" class="btn-icon btn-w-xs btn-primary input-group-text flex-fill product-quantity-minus" onclick="changeQty(this,0);"><i class="ri-subtract-line"></i></button> *@
+                        <input class="form-control form-control-sm text-center w-100 h-75 ri-align-vertically" aria-label="quantity" id="qty" name="qty" type="number" min="0" value="">
+                        @* <button type="button" class="btn btn-icon btn-primary input-group-text flex-fill product-quantity-plus" onclick="changeQty(this,1);"><i class="ri-add-line"></i></button> *@
+                    </div>
+                </td>
+                <td><input class="form-control form-control-sm form-control-light" id="rate" name="rate" type="number" min="0" value=""></td>
+                <td class="col-2">
+                    @*  <label class="custom-select"> *@
+                    <select class="form-control-sm form-select-sm" id="taxType" name="taxType" asp-items="@ViewBag.GSTTypes as List<SelectListItem>">
+                        <option value="0">Select Tax</option>
+                    </select>
+                    @* </label> *@
+                </td>
+                <td><input class="form-control form-control-sm form-co ntrol-light" id="rowTotal" type="number" readonly></td>
+                <td>
+                    <button type="button" id="addRow" name="addRow" class="btn btn-sm btn-icon btn-success-light" onclick="addNewRow();"><i class="ri-add-line"></i></button>
+                    <button type="button" id="editRow" name="editRow" class="btn btn-sm btn-icon btn-primary-light" onclick="editSelectedRow();"><i class="ri-edit-line"></i></button>
+                    <button type="button" id="deleteRow" name="deleteRow" class="btn btn-sm btn-icon btn-danger-light" onclick="deleteSelectedRows();"><i class="ri-delete-bin-5-line"></i></button>
+                    <button type="button" id="reset" name="reset" class="btn btn-sm btn-icon btn-info-light" onclick="resetDropdownTextboxes();"><i class="ri-close-circle-line"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="9">
+                    <table class="table table-sm text-sm" id="productDetailTable">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Product Name</th>
+                                <th>HSN No</th>
+                                <th>UOM</th>
+                                <th>Quantity</th>
+                                <th>Rate</th>
+                                <th>Tax %</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="childTableBody">
+                            <!-- Child table rows will be added here -->
+                        </tbody>
+                    </table>
+                    <input type="hidden" id="selRowIndex" name="selRowIndex" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm nowrap text-nowrap mt-1">
+        <tbody>
+            @*  <tr>
+            <td colspan="6"><button type="button" id="addInvDetailRow" name="addInvDetailRow" class="btn btn-primary input-group-text flex-fill"><i class="bi bi-plus-lg"></i> &nbsp;Add Product</button></td>
+            </tr>*@
+            <tr>
+                @* <td colspan="4" class="col-7">
+                <div class="mb-5 pb-5">
+                <label for="challan-note" class="form-label">Note:</label>
+                <textarea class="form-control form-control-light" id="challan-note" rows="8">Once the challan has been verified by the accounts payable team and recorded, the only task left is to send it for approval before releasing the payment</textarea>
+                </div>
+                </td>*@
+
+                <td colspan="2" class="float-end">
+                    <table class="table table-sm text-nowrap mb-0 table-borderless">
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                    <div class="fw-semibold">Sub Total :</div>
+                                </th>
+                                <td>
+                                    <input type="text" id="subTotal" name="subTotal" class="form-control form-control-light text-end" placeholder="Sub Total" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <div class="fw-semibold">Discount :</div>
+                                </th>
+                                <td>
+                                    <input type="number" id="discount" min="0" name="discount" class="form-control form-control-light text-end" placeholder="Enter Disc Amt">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <div class="fw-semibold">CGST :</div>
+                                </th>
+                                <td>
+                                    <input type="text" id="cgst" name="cgst" class="form-control form-control-light text-end" placeholder="CGST" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <div class="fw-semibold">SSGT :</div>
+                                </th>
+                                <td>
+                                    <input type="text" id="sgst" name="sgst" class="form-control form-control-light text-end" placeholder="SGST" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <div class="fs-14 fw-semibold">Total :</div>
+                                </th>
+                                <td>
+                                    <input type="text" id="grandTotal" name="grandTotal" class="form-control form-control-light text-end" placeholder="Grand Total" readonly>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="solid-dangerToast" class="toast colored-toast bg-danger-transparent text-danger" role="alert" aria-live="assertive"
+         aria-atomic="true">
+        <div class="toast-header bg-danger text-fixed-white">
+            <img class="bd-placeholder-img rounded me-2" src="~/bs/images/brand-logos/toggle-dark.png" alt="...">
+            <strong class="me-auto">Validation Errors</strong>
+            <button type="button" class="btn-close" aria-label="Close" onclick="closeErrorDiv();"></button>
+        </div>
+        <div id="productValidationError" class="toast-body">
+        </div>
+    </div>
+</div>

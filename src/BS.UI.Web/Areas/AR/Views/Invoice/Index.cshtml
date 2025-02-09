@@ -28,220 +28,99 @@
             </div>
         </div>
         <button type="button" class="btn btn-primary btn-wave" onclick="window.location='@Url.Action("InvoiceAddEdit", "Invoice")'">Add Invoice</button>
+        <button type="button" class="btn btn-sm btn-icon btn-primary-light" onclick="ShowSearchModal();"><i class="bi bi-card-list" title="Advanced Search"></i></button>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table text-nowrap table-bordered">
+            <table id="responsiveDataTable" class="table text-nowrap table-bordered" style="width:100%">
                 <thead>
                     <tr>
-                        <th>
-                            <input class="form-check-input check-all" type="checkbox" id="all-invoices" value="" aria-label="...">
-                        </th>
-                        <th scope="col">Invoice Title</th>
-                        <th scope="col">Invoice#</th>
-                        <th scope="col">Invoice Date</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Due Date</th>
+                        <th scope="col">Bill#</th>
+                        <th scope="col">Bill Date</th>
+                        <th scope="col">Customer Name</th>
+                        <th scope="col">Net Amt</th>
+                        <th scope="col">CGST Amt</th>
+                        <th scope="col">SGST Amt</th>
+                        <th scope="col">IGST Amt</th>
+                        <th scope="col">GST Amt</th>
                         <th scope="col">Total</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="invoice-list">
-                        <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..."></td>
-                        <td>
-                            <span class="fw-semibold">Design New Landing Page</span>
-                        </td>
-                        <td>
-                            <span class="fw-semibold">SPK - 01</span>
-                        </td>
-                        <td>
-                            02-06-2023
-                        </td>
-                        <td>
-                            <span class="fw-semibold text-primary">New</span>
-                        </td>
-                        <td>
-                            10-06-2023
-                        </td>
-                        <td>
-                            ₹7008.50
-                        </td>
-                        <td>
-                            <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
-                            <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
-                        </td>
-                    </tr>
-                    <tr class="invoice-list">
-                        <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..." checked></td>
-                        <td>
-                            <span class="fw-semibold">New Project Buleprint</span>
-                        </td>
-                        <td>
-                            <span class="fw-semibold">SPK - 04</span>
-                        </td>
-                        <td>
-                            05-06-2023
-                        </td>
-                        <td>
-                            <span class="fw-semibold text-secondary">Inprogress</span>
-                        </td>
-                        <td>
-                            15-06-2023
-                        </td>
-                        <td>
-                            ₹1123.50
-                        </td>
-                        <td>
-                            <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
-                            <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
-                        </td>
-                    </tr>
-                    <tr class="invoice-list">
-                        <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..."></td>
-                        <td>
-                            <span class="fw-semibold">Server Side Validation</span>
-                        </td>
-                        <td>
-                            <span class="fw-semibold">SPK - 11</span>
-                        </td>
-                        <td>
-                            12-06-2023
-                        </td>
-                        <td>
-                            <span class="fw-semibold text-warning">Pending</span>
-                        </td>
-                        <td>
-                            16-06-2023
-                        </td>
-                        <td>
-                            ₹5250.50
-                        </td>
-                        <td>
-                            <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
-                            <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
-                        </td>
-                    </tr>
-                    <tr class="invoice-list">
-                        <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..."></td>
-                        <td>
-                            <span class="fw-semibold">New Plugin Development</span>
-                        </td>
-                        <td>
-                            <span class="fw-semibold">SPK - 24</span>
-                        </td>
-                        <td>
-                            08-06-2023
-                        </td>
-                        <td>
-                            <span class="fw-semibold text-success">Completed</span>
-                        </td>
-                        <td>
-                            17-06-2023
-                        </td>
-                        <td>
-                            ₹7000.00
-                        </td>
-                        <td>
-                            <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
-                            <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
-                        </td>
-                    </tr>
-                    <tr class="invoice-list">
-                        <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..." checked></td>
-                        <td>
-                            <span class="fw-semibold">Designing New Authentication Page</span>
-                        </td>
-                        <td>
-                            <span class="fw-semibold">SPK - 16</span>
-                        </td>
-                        <td>
-                            03-06-2023
-                        </td>
-                        <td>
-                            <span class="fw-semibold text-secondary">Inprogress</span>
-                        </td>
-                        <td>
-                            08-06-2023
-                        </td>
-                        <td>
-                            ₹19,351.25
-                        </td>
-                        <td>
-                            <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
-                            <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
-                        </td>
-                    </tr>
-                    <tr class="invoice-list">
-                        <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..." checked></td>
-                        <td>
-                            <span class="fw-semibold">Documentation For New Template</span>
-                        </td>
-                        <td>
-                            <span class="fw-semibold">SPK - 07</span>
-                        </td>
-                        <td>
-                            12-06-2023
-                        </td>
-                        <td>
-                            <span class="fw-semibold text-primary">New</span>
-                        </td>
-                        <td>
-                            25-06-2023
-                        </td>
-                        <td>
-                            ₹5250.50
-                        </td>
-                        <td>
-                            <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
-                            <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
-                        </td>
-                    </tr>
-                    <tr class="invoice-list">
-                        <td class="invoice-checkbox"><input class="form-check-input" type="checkbox" value="" aria-label="..."></td>
-                        <td>
-                            <span class="fw-semibold">Updating Old UI</span>
-                        </td>
-                        <td>
-                            <span class="fw-semibold">SPK - 13</span>
-                        </td>
-                        <td>
-                            06-06-2023
-                        </td>
-                        <td>
-                            <span class="fw-semibold text-success">Completed</span>
-                        </td>
-                        <td>
-                            12-06-2023
-                        </td>
-                        <td>
-                            ₹7800.00
-                        </td>
-                        <td>
-                            <button class="btn btn-primary-light btn-icon btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="ri-edit-line"></i></button>
-                            <button class="btn btn-danger-light btn-icon ms-1 btn-sm invoice-delete-btn"><i class="ri-delete-bin-5-line"></i></button>
-                        </td>
-                    </tr>
+ 
                 </tbody>
             </table>
         </div>
     </div>
-    <div class="card-footer border-top-0">
-        <div class="d-flex align-items-center flex-wrap overflow-auto">
-            <div class="mb-2 mb-sm-0">
-                Showing <b>1</b> to <b>10</b> of <b>10</b> entries <i class="bi bi-arrow-right ms-2 fw-semibold"></i>
+</div>
+
+<div class="modal" id="invoiceSearchModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchTitle">Search:</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="ms-auto">
-                <ul class="pagination mb-0 overflow-auto">
-                    <li class="page-item disabled"><a class="page-link">Previous</a> </li>
-                    <li class="page-item active" aria-current="page"><a class="page-link" href="javascript:void(0);">1</a></li>
-                    <li class="page-item"> <a class="page-link" href="javascript:void(0);">2</a> </li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">5</a></li>
-                    <li class="page-item"> <a class="page-link" href="javascript:void(0);">Next</a> </li>
-                </ul>
-            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <label for="billContactName" class="form-label">Contact Name</label>
+                                <input type="text" class="form-control" id="billContactName" name="billContactName" placeholder="Contact Name">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="billAddress1" class="form-label">Address Line #1</label>
+                                <input type="text" class="form-control" id="billAddress1" name="billAddress1" placeholder="Address Line #1">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <label for="billAddress2" class="form-label">Address Line #2</label>
+                                <input type="text" class="form-control" id="billAddress2" name="billAddress2" placeholder="Address Line #2">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="billCity" class="form-label">City</label>
+                                <input type="text" class="form-control" id="billCity" name="billCity" placeholder="City">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <label for="billState" class="form-label">Bill State</label>
+                                <select class="form-control" data-trigger name="billState" id="billState" single>
+                                    <option value="">Select</option>
+                                    <option value="AP">Andhra Pradesh</option>
+                                    <option value="BR">Bihar</option>
+                                    <option value="MP">Madhya Pradesh</option>
+                                    <option value="MH">Maharashtra</option>
+                                    <option value="MN">Manipur</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="billZipcode" class="form-label">ZipCode</label>
+                                <input type="text" class="form-control" id="billZipcode" name="billZipcode" placeholder="ZipCode">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <label for="billWorkPhone" class="form-label">Work Phone</label>
+                                <input type="tel" class="form-control" id="billWorkPhone" name="billWorkPhone" placeholder="+123-456-7890">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="billWhatsappPhone" class="form-label">WhatsApp Phone</label>
+                                <input type="tel" class="form-control" id="billWhatsappPhone" name="billWhatsappPhone" placeholder="+123-456-7890">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button id="ember3334" class="btn btn-primary" type="submit">
+                        <!----> Search
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -270,3 +149,7 @@
     }
 
 </style>
+
+@section Scripts {
+    <script src="~/bs/js/ar_invoicelist.js" asp-append-version="true"></script>
+}

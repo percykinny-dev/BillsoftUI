@@ -76,7 +76,7 @@
                 </li>
                 <li class="slide__category"><span class="category-name">Master</span></li>
                 <li class="slide">
-                    <a href="~/html/widgets.html" class="side-menu__item">
+                    <a href=" @Url.Action("Index", "Item", new { area = "AR" })" class="side-menu__item">
                         <i class="bx bx-gift side-menu__icon"></i>
                         <span class="side-menu__label">Items<span class="badge bg-danger-transparent ms-2">Hot</span></span>
                     </a>
@@ -112,6 +112,18 @@
                     <a href="~/html/widgets.html" class="side-menu__item">
                         <i class="bx bx-gift side-menu__icon"></i>
                         <span class="side-menu__label">Proforma Invoices</span>
+                    </a>
+                </li>
+                <li class="slide">
+                    <a href="@Url.Action("Index", "Purchase", new { area = "AP" })" class="side-menu__item">
+                        <i class="bx bx-gift side-menu__icon"></i>
+                        <span class="side-menu__label">Purchases</span>
+                    </a>
+                </li>
+                <li class="slide">
+                    <a href="@Url.Action("Index", "Quotation", new { area = "AP" })" class="side-menu__item">
+                        <i class="bx bx-gift side-menu__icon"></i>
+                        <span class="side-menu__label">Quotations</span>
                     </a>
                 </li>
                 <li class="slide">

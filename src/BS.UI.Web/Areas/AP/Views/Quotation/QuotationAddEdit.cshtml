@@ -1,0 +1,273 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model BS.Application.ViewModels.AR.ARChallanDetailVM
+@{
+    Dictionary<string, string> data = ViewBag.Resources;
+
+    ViewBag.Title = ViewBag.Resources["AP_QUOTATION_CREATE_PAGETITLE"];
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="d-md-flex d-block align-items-center justify-content-between my-2 page-header-breadcrumb">
+    <h1 class="page-title fw-semibold fs-18 mb-0">@ViewBag.Title</h1>
+</div>
+<!-- Page Header Close -->
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-body add-quotation p-0">
+                <div class="p-2">
+                    <div class="row gx-5">
+                        <form id="frmQuotation" name="frmQuotation" class="needs-validation" action="" method="post" novalidate>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="card custom-card">
+                                        <div class="card-header d-flex justify-content-between w-100">
+                                            <div class="col-xl-6 col-lg-4 col-md-4">
+                                                <select class="form-control" data-trigger name="customerID" id="customerID" asp-items="@ViewBag.Customers as List<SelectListItem>">
+                                                    <option value="" selected>Party / Vendor</option>
+                                                </select>
+                                            </div>
+                                            <div class="ml-auto ms-2">
+                                                <input type="hidden" id="selCustomerId" name="selCustomerId" />
+                                                @* <button type="button" class="btn btn-primary btn-wave" onclick="window.location='@Url.Action("Index", "Challan")'">Back</button> *@
+                                                <button type="button" class="btn btn-primary" onclick="window.location='@Url.Action("Index", "Quotation")'" id="back" name="back">Back<i class="ms-1 align-middle ri-send-plane-1-line  d-inline-block"></i></button>
+                                                <button class="btn btn-sm btn-icon btn-secondary-light"><i class="bi bi-printer-fill"></i></button>
+                                                <button class="btn btn-sm btn-icon btn-success-light"><i class="bi bi-download"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="card custom-card">
+                                            <div class="row gy-3">
+                                                <div class="col-xl-12">
+                                                    <div class="row hidden-element" id="addressRow">
+                                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                                            <p class="form-label mb-1 mt-1">
+                                                                Address :
+                                                                <button type="button" class="btn btn-sm btn-icon btn-primary-light" onclick="ShowAddressList(1);"><i class="bi bi-card-list" title="choose an address"></i></button>
+                                                            </p>
+                                                            <div class="d-flex fs-14 mt-3 form-control form-control-light">
+                                                                <div>
+                                                                    <p class="mb-1 fs-12 fw-bold"><span id="quotationContact" name="quotationContact"> </span></p>
+                                                                    <p class="mb-1">
+                                                                        <i class="ri-mail-line me-2 align-middle fs-14 text-muted"></i><span id="quotationEmailAddress" name="quotationEmailAddress"> </span>
+                                                                        <span class="ms-4 align-right"><i class="ri-phone-line me-2 align-middle fs-14 text-muted"></i></span> <span id="quotationPhone" name="quotationPhone"></span>
+                                                                    </p>
+                                                                    <p class="mb-1"><span id="quotationAddress" name="quotationAddress"><i class="bi bi-briefcase me-2"></i> </span></p>
+                                                                    <p><i class="bi bi-geo-alt me-1"></i><span id="quotationZipcode" name="quotationZipcode"></span></p>
+
+
+                                                                </div>
+                                                                <input type="hidden" name="quotationAddressId" id="quotationAddressId" value="" />
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="d-flex fs-12 mt-3 form-control form-control-light">
+
+                                                        <div class="col-xl-4 me-2 choices-control">
+                                                            <label for="currency" class="form-label">Currency</label>
+                                                            <select class="form-control" data-trigger name="currency" id="currency">
+                                                                <option value="">Select Currency</option>
+                                                                <option value="USD">USD - (United States Dollar)</option>
+                                                                <option value="INR">₹ - (Indian Ruppee)</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-xl-8">
+                                                            <label for="Note" class="form-label">Note</label>
+                                                            <input type="text" class="form-control form-control-light" id="note" name="note" placeholder="Notes">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+
+                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                                        <div class="row">
+                                                            <div class="col-xl-4">
+                                                                <label for="quotationno" class="form-label">Quotation No.</label>
+                                                                <input type="text" class="form-control" id="quotationno" name="quotationno" placeholder="Quotation No." value="">
+                                                            </div>
+                                                            <div class="col-xl-4">
+                                                                <label for="finYear" class="form-label">Fin Year</label>
+                                                                <input type="text" class="form-control form-control-light" id="finYear" name="finYear" value="2023-24" disabled>
+                                                            </div>
+                                                            <div class="col-xl-4">
+                                                                <label for="quotationdate" class="form-label">Quotation Date</label>
+                                                                <input type="text" class="form-control form-control-light" id="quotationdate" name="quotationdate" placeholder="Choose date">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-xl-6">
+                                                                <label for="gstno" class="form-label">GST No</label>
+                                                                <input type="text" class="form-control form-control-light" maxlength="15" id="gstno" name="gstno" placeholder="GST No.">
+                                                            </div>
+                                                            <div class="col-xl-6">
+                                                                <label for="state" class="form-label">State</label>
+                                                                <select class="form-control" data-trigger name="state" id="state" single>
+                                                                    <option value="" selected>Select</option>
+                                                                    <option value="AP">Andhra Pradesh</option>
+                                                                    <option value="BR">Bihar</option>
+                                                                    <option value="MP">Madhya Pradesh</option>
+                                                                    <option value="MH">Maharashtra</option>
+                                                                    <option value="MN">Manipur</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            @* <div class="d-flex fs-12  mt-2 form-control "> *@
+                                                            <div class="col-xl-3">
+                                                                @* <label for="discount" class="form-label d-block text-primary ">Discount</label> *@
+                                                                <div class="form-check form-check-inline ">
+                                                                    <input class="form-check-input" type="radio" name="rdodiscountperc" id="rdodiscountperc" checked="checked">
+                                                                    @* <input type="number" class="form-control form-control-light" id="discountperc" name="discountperc" min="0" max="100" placeholder="Perc%"> *@
+                                                                    <label class="form-label text-primary" for="rdodiscountperc">SGST/CGST</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline ">
+                                                                    <input class="form-check-input" type="radio" name="rdodiscountperc" id="rdodiscountperc">
+                                                                    @* <input type="number" class="form-control form-control-light " id="discountamt" name="discountamt" min="0" placeholder="Amount"> *@
+                                                                    <label class="form-label text-primary" for="rdodiscountperc">IGST</label>
+
+                                                                </div>
+                                                            </div>
+                                                            @* </div> *@
+
+                                                            @* <div class="row"> *@
+                                                            @* <div class="d-flex fs-12  mt-2 form-control "> *@
+                                                            <div class="col-xl-3">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" id="chkInclusiverate" name="chkInclusiverate">
+                                                                    <label class="form-label text-primary" for="chkInclusiverate">
+                                                                        Inclusive Rate
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" id="chkItemwisediscount" name="chkItemwisediscount" onclick="toggleTextBox()">
+                                                                    <label class="form-label text-primary" for="chkItemwisediscount">
+                                                                        Itemwise Disc
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            @* </div> *@
+                                                            @* </div> *@
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-xxl-6 col-xl-12 col-lg-12 col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-xl-6">
+                                                            <label for="department" class="form-label">Department</label>
+                                                            <input type="text" class="form-control" id="department" name="department" placeholder="Department Name" value="">
+                                                        </div>
+
+                                                        <div class="col-xl-6">
+                                                            <label for="contactperson" class="form-label">Contact Person</label>
+                                                            <input type="text" class="form-control form-control-light" id="contactperson" name="contactperson" placeholder="Contact Person">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xl-6">
+                                                            <label for="delivery" class="form-label">Delivery</label>
+                                                            <input type="text" class="form-control" id="delivery" name="delivery" placeholder="Delivery" value="">
+                                                        </div>
+
+                                                        <div class="col-xl-6">
+                                                            <label for="freight" class="form-label">Freight</label>
+                                                            <input type="text" class="form-control form-control-light" id="freight" name="freight" placeholder="Freight">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xl-6">
+                                                            <label for="paymentterms" class="form-label">Payment Terms</label>
+                                                            <input type="text" class="form-control" id="paymentterms" name="paymentterms" placeholder="Payment Terms" value="">
+                                                        </div>
+
+                                                        <div class="col-xl-6">
+                                                            <label for="cost" class="form-label">Cost</label>
+                                                            <input type="text" class="form-control form-control-light" id="cost" name="cost" placeholder="Cost">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="card custom-card">
+                                                    <div class="row gy-3">
+                                                        <div class="col-xl-12">
+                                                            <partial name="_productDetailQuotation">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-end">
+                                            @*<button class="btn btn-light me-1"><i class="ri-eye-line me-1 align-middle d-inline-block"></i>Preview</button>*@
+                                            <button class="btn btn-primary" id="saveQuotation" name="saveQuotation">Save Quotation <i class="ms-1 align-middle ri-send-plane-1-line  d-inline-block"></i></button>
+                                            <input type="hidden" id="quotationid" name="quotationid" value="0" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="addressModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addressTitle">Billing Addresses:</h5>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="addressListContainer">
+                <div class="list-group">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="selectAddressNo" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="selectAddressYes" class="btn btn-success">Ok</button>
+                <input type="hidden" id="selBillAddressId" value="0" />
+                <input type="hidden" id="selShipAddressId" value="0" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .button-container {
+        margin-top: 20px;
+    }
+
+    .input-group .btn {
+        position: relative;
+        z-index: 0;
+    }
+</style>
+
+<script>
+    function toggleTextBox() {
+        var textBox = document.getElementById("disc");
+        if (document.getElementById("chkItemwisediscount").checked) {
+            textBox.disabled = false;
+        } else {
+            textBox.disabled = true;
+        }
+    }
+</script>
+
+@section Scripts {
+    <script src="~/bs/js/ap_quotation.js" asp-append-version="true"></script>
+}

@@ -1,4 +1,6 @@
-﻿namespace BS.Application.Services.AR;
+﻿using BS.Application.Repositories.AR;
+
+namespace BS.Application.Services.AR;
 
 public class ARInvoiceService  : IARInvoiceService
 {

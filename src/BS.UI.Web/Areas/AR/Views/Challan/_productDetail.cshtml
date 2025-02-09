@@ -18,10 +18,10 @@
             <tr id="itemRow1">
                 <td>
                     <select class="form-control-sm form-select-sm" name="itemId1" id="itemId1" asp-items="@ViewBag.Products as List<SelectListItem>">
-                        <option value="">Select Product</option>
+                        <option value="0">Select Product</option>
                     </select>
                 </td>
-                <td><input class="form-control form-control-sm form-control-light" id="hsnNo" name="hsnNo" type="text" value="5656511112"></td>
+                <td><input class="form-control form-control-sm form-control-light" id="hsnNo" name="hsnNo" type="text" value=""></td>
                 <td>
                     <select class="form-control-sm form-select-sm" id="uom" name="uom" asp-items="@ViewBag.UOMTypes as List<SelectListItem>">
                         <option value="0">Select UOM</option>
@@ -30,11 +30,11 @@
                 <td class="invoice-quantity-container col-1">
                     <div class="input-group border rounded flex-sm-nowrap align-items-center">
                         @* <button type="button" class="btn-icon btn-w-xs btn-primary input-group-text flex-fill product-quantity-minus" onclick="changeQty(this,0);"><i class="ri-subtract-line"></i></button> *@
-                        <input class="form-control form-control-sm text-center w-100 h-75 ri-align-vertically" aria-label="quantity" id="qty" name="qty" type="number" value="1">
+                        <input class="form-control form-control-sm text-center w-100 h-75 ri-align-vertically" aria-label="quantity" id="qty" name="qty" type="number" min="0" value="">
                         @* <button type="button" class="btn btn-icon btn-primary input-group-text flex-fill product-quantity-plus" onclick="changeQty(this,1);"><i class="ri-add-line"></i></button> *@
                     </div>
                 </td>
-                <td><input class="form-control form-control-sm form-control-light" id="rate" name="rate" type="number"></td>
+                <td><input class="form-control form-control-sm form-control-light" id="rate" name="rate" type="number" min="0" value=""></td>
                 <td class="col-2">
                     @*  <label class="custom-select"> *@
                     <select class="form-control-sm form-select-sm" id="taxType" name="taxType" asp-items="@ViewBag.GSTTypes as List<SelectListItem>">
@@ -46,7 +46,8 @@
                 <td>
                     <button type="button" id="addRow" name="addRow" class="btn btn-sm btn-icon btn-success-light" onclick="addNewRow();"><i class="ri-add-line"></i></button>
                     <button type="button" id="editRow" name="editRow" class="btn btn-sm btn-icon btn-primary-light" onclick="editSelectedRow();"><i class="ri-edit-line"></i></button>
-                    <button type="button" id="deleteRow" name="deleteRow" class="btn btn-sm btn-icon btn-danger-light"><i class="ri-delete-bin-5-line"></i></button>
+                    <button type="button" id="deleteRow" name="deleteRow" class="btn btn-sm btn-icon btn-danger-light" onclick="deleteSelectedRows();"><i class="ri-delete-bin-5-line"></i></button>
+                    <button type="button" id="reset" name="reset" class="btn btn-sm btn-icon btn-info-light" onclick="resetDropdownTextboxes();"><i class="ri-close-circle-line"></i></button>
                 </td>
             </tr>
             <tr>
@@ -85,7 +86,7 @@
                 <textarea class="form-control form-control-light" id="challan-note" rows="8">Once the challan has been verified by the accounts payable team and recorded, the only task left is to send it for approval before releasing the payment</textarea>
                 </div>
                 </td>*@
-   
+
                 <td colspan="2" class="float-end">
                     <table class="table table-sm text-nowrap mb-0 table-borderless">
                         <tbody>
@@ -94,15 +95,15 @@
                                     <div class="fw-semibold">Sub Total :</div>
                                 </th>
                                 <td>
-                                    <input type="text" id="subTotal" name="subTotal" class="form-control form-control-light text-end" readonly>
+                                    <input type="text" id="subTotal" name="subTotal" class="form-control form-control-light text-end" placeholder="Sub Total" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">
-                                    <div class="fw-semibold">Discount :</div>
+                                    <div class="fw-semibold">Discount Amount :</div>
                                 </th>
                                 <td>
-                                    <input type="number" id="discount" name="discount" class="form-control form-control-light text-end" placeholder="Enter Amount">
+                                    <input type="number" min="0" id="discount" name="discount" class="form-control form-control-light text-end" placeholder="Enter Disc Amt">
                                 </td>
                             </tr>
                             <tr>
@@ -110,7 +111,7 @@
                                     <div class="fw-semibold">CGST :</div>
                                 </th>
                                 <td>
-                                    <input type="text" id="cgst" name="cgst" class="form-control form-control-light text-end" placeholder="cgst" readonly>
+                                    <input type="text" id="cgst" name="cgst" class="form-control form-control-light text-end" placeholder="CGST" readonly>
                                 </td>
                             </tr>
                             <tr>
@@ -118,7 +119,7 @@
                                     <div class="fw-semibold">SSGT :</div>
                                 </th>
                                 <td>
-                                    <input type="text" id="sgst" name="sgst" class="form-control form-control-light text-end" placeholder="sgst" readonly>
+                                    <input type="text" id="sgst" name="sgst" class="form-control form-control-light text-end" placeholder="SGST" readonly>
                                 </td>
                             </tr>
                             <tr>

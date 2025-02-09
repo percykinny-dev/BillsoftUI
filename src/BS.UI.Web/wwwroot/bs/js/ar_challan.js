@@ -1,19 +1,21 @@
-﻿function ShowSearchModal() {customerID
+﻿
+function ShowSearchModal() {
+    CustomerID
     $("#challanSearchModal").modal('show');
 }
 
 function ShowHideAddress() {
-    let customerId = document.getElementById("customerID");
+    let CustomerId = document.getElementById("CustomerID");
     let addressRow = document.getElementById('addressRow');
 
-    var isCustomerSelected = (customerId.value !== '');
+    var isCustomerSelected = (CustomerId.value !== '');
 
     // Toggle the 'hidden-element' class based on the selection
     if (isCustomerSelected) {
         clearAddressFields();
-        document.getElementById('selCustomerId').value = customerId.value;
+        document.getElementById('selCustomerId').value = CustomerId.value;
 
-        getCustomerDefaultAddress(customerId.value)
+        getCustomerDefaultAddress(CustomerId.value)
             .then(function (defaultAddressList) {
                 if (defaultAddressList !== null) {
                     defaultAddressList.forEach(function (address) {
@@ -101,7 +103,7 @@ function populateAddressList(addresses) {
     //var addressListContainer = document.getElementById("addressListContainer");
 
     // Clear existing content
-   
+
     // Sample JSON array of addresses
     //var addresses = [
     //    {
@@ -248,7 +250,7 @@ function updateAddressFields(selectedAddress) {
         document.getElementById('shipPhone').innerText = selectedAddress.workPhone;
         document.getElementById('shipAddressId').value = selectedAddress.addressID;
     }
-   
+
 }
 
 function clearAddressFields() {
@@ -267,41 +269,28 @@ function clearAddressFields() {
 }
 
 function addNewRow() {
-
     if (!validateProductDetails()) {
         setTimeout(function () {
             $('#solid-dangerToast').show();
 
-        },5);
+        }, 5);
         /*$('#solid-dangerToast').show();*/
         return;
     }
 
-    //// Get the values from the parent table row
-    //var productName = $('#itemId1 option:selected').text();
-    //var productNameVal = $('#itemId1 option:selected').val();
-    //var hsnNo = $('#hsnNo').val();
-    //var uom = $('#uom option:selected').text();
-    //var uomVal = $('#uom option:selected').val();
-    //var quantity = $('#qty').val();
-    //var rate = $('#rate').val();
-
-    //var pattern = /\[(\d+)%\]/;
-    //var tax = extractNumericValue($('#taxType option:selected').text(), pattern) || 0;
-    //var taxString = $('#taxType option:selected').text();
-
-    //var taxVal = $('#taxType option:selected').val();
-    //var total = $('#rowTotal').val();
-
-    //var rowCount = $('#childTableBody tr').length;
-
     var rowValues = getRowValues();
-    
+    //>> Check Duplicate records based on Item
+    var isExist = CheckDuplicatesProducts(rowValues.productNameVal);
+    if (isExist) {
+        alert('Duplicate record !!! Similar Product exists...');
+        return;
+    }
+    //<<
+
     // Construct the HTML for the new row in the child table
     var newRowHtml = '<tr>';
-
     newRowHtml += '<td><input type="checkbox" id="row' + rowValues.rowCount + '" class="form-check-input"></td>'; // Checkbox column
-    newRowHtml += '<td data-productname="' + rowValues.productNameVal + '" ><a href="#" onclick="selectRow(' + rowValues.rowCount + ');">' + rowValues.productName + '</a></td>'; // Product Name
+    newRowHtml += '<td data-productname="' + rowValues.productNameVal + '" ><a href="#" onclick="selectRow(' + rowValues.rowCount + ');event.preventDefault();">' + rowValues.productName + '</a></td>'; // Product Name
     newRowHtml += '<td data-hsnno="' + rowValues.hsnNo + '">' + rowValues.hsnNo + '</td>'; // HSN No
     newRowHtml += '<td data-uom="' + rowValues.uomVal + '">' + rowValues.uom + '</td>'; // UOM
     newRowHtml += '<td data-qty="' + rowValues.quantity + '">' + rowValues.quantity + '</td>'; // Quantity
@@ -313,7 +302,14 @@ function addNewRow() {
     // Append the new row to the child table
     $('#childTableBody').append(newRowHtml);
 
+    // Recalculate TaxTotal
     recalculateTotals();
+
+    //Reset dropdowns and textboxes
+    resetDropdownTextboxes();
+
+    //document.getElementById("editRow").disabled = false;
+    document.getElementById("deleteRow").disabled = false;
 }
 
 function getRowValues() {
@@ -325,7 +321,7 @@ function getRowValues() {
     var quantity = $('#qty').val();
     var rate = $('#rate').val();
 
-    var pattern = /\[(\d+)%\]/;
+    var pattern = /[\d\.]+/g;  // /\[(\d+)%\]/;
     var tax = extractNumericValue($('#taxType option:selected').text(), pattern) || 0;
     var taxString = $('#taxType option:selected').text();
 
@@ -333,7 +329,6 @@ function getRowValues() {
     var total = $('#rowTotal').val();
 
     var rowCount = $('#childTableBody tr').length;
-
     return {
         productName: productName,
         productNameVal: productNameVal,
@@ -373,52 +368,70 @@ $('body').on('click', function (e) {
 });
 
 function selectRow(rowIndex) {
-
     $('#selRowIndex').val(rowIndex);
 
     var row = $('#childTableBody tr').eq(rowIndex);
+
     var rowData = {
         itemName: row.find('[data-productname]').data('productname'),
         hsnNo: row.find('[data-hsnno]').data('hsnno'),
-        uom: row.find('[data-uom]').data('uom')+'',
+        uom: row.find('[data-uom]').data('uom') + '',
         qty: row.find('[data-qty]').data('qty'),
         rate: row.find('[data-rate]').data('rate'),
-        tax: row.find('[data-tax]').data('tax')+'',
-        rowTotal: row.find('[data-rowtotal]').data('rowtotal'),
+        tax: row.find('[data-tax]').data('tax') + '',
+        rowTotal: row.find('[data-rowtotal]').data('rowtotal')
         // Add other fields here
     };
-    console.log(rowData);
-    console.log(rowData.itemName);
+    var taxVal = row.find('td[data-tax]').attr('data-tax');
 
-    //var itemNameTxt = row.find('td:nth-child(1)').textContent;
+    var productNameVal = row.find('td[data-productname]').attr('data-productname');
+    var uomVal = row.find('td[data-uom]').attr('data-uom');
+    var qtyVal = row.find('td[data-qty]').attr('data-qty');
+    var rateVal = row.find('td[data-rate]').attr('data-rate');
 
-    //$('#itemId1').val(rowData.itemName);
+    console.log('Select row: ....' + row.html());
+
     $('#hsnNo').val(rowData.hsnNo);
     //$('#uom option:selected').val(rowData.uom);
-    $('#qty').val(rowData.qty);
-    $('#rate').val(rowData.rate);
-    //$('#taxType option:selected').val(rowData.tax);
+    $('#qty').val(qtyVal);
+    $('#rate').val(rateVal);
+    // $('#taxType option:selected').val(rowData.tax);
     $('#rowTotal').val(rowData.rowTotal);
 
-    itemDropdown.setChoiceByValue(rowData.itemName);
-    uomDropdown.setChoiceByValue(rowData.uom);
-    taxDropdown.setChoiceByValue(rowData.tax);
- 
+    itemDropdown.setChoiceByValue(productNameVal.toString());
+    uomDropdown.setChoiceByValue(uomVal.toString());
+    taxDropdown.setChoiceByValue(taxVal.toString());
+
+    document.getElementById("addRow").disabled = true;
+    document.getElementById("editRow").disabled = false;
+    document.getElementById("deleteRow").disabled = true;
     //console.log(productName, hsnNo, uom, quantity, rate, tax, total);
 }
 
 function editSelectedRow() {
+    if (!validateProductDetails()) {
+        setTimeout(function () {
+            $('#solid-dangerToast').show();
+
+        }, 5);
+        /*$('#solid-dangerToast').show();*/
+        return;
+    }
 
     var rowIndex = parseInt(document.getElementById('selRowIndex').value);
     if (isNaN(rowIndex)) { return };
 
     var row = $('#childTableBody tr').eq(rowIndex);
-
     var rowValues = getRowValues();
 
+    //console.log('innertext .....' + rowValues);
+
     // Update cell values in the row
-    var productHtml = '<a href="#" onclick="selectRow(' + rowIndex + ');">' + rowValues.productName + '</a>'
-    row.find('td[data-productname]').innerHTML = productHtml;
+    var productHtml = '<a href="#" onclick="selectRow(' + rowIndex + ');event.preventDefault();">' + rowValues.productName + '</a>'
+    //alert(productHtml);
+    //row.find('td[data-productname]').innerHTML = productHtml;
+    //row.querySelector('td[data-productname]').innerHTML = productHtml;
+    $(row).find('td[data-productname]').html(productHtml);
     row.find('td[data-hsnno]').text(rowValues.hsnNo);
     row.find('td[data-uom]').text(rowValues.uom);
     row.find('td[data-qty]').text(rowValues.quantity);
@@ -426,20 +439,59 @@ function editSelectedRow() {
     row.find('td[data-tax]').text(rowValues.taxString);
     row.find('td[data-rowtotal]').text(rowValues.total);
 
-    row.find('td[data-productname]').data("productname", rowValues.productNameVal);
-    row.find('td[data-hsnno]').data("hsnno", rowValues.hsnNo);
-    row.find('td[data-uom]').data("uom", rowValues.uomVal);
-    row.find('td[data-qty]').data("qty", rowValues.quantity);
-    row.find('td[data-rate]').data("rate", rowValues.rate);
-    row.find('td[data-tax]').data("tax", rowValues.taxVal);
-    row.find('td[data-gst]').data("gst", rowValues.tax);
-    row.find('[data-rowtotal]').data("rowtotal", rowValues.total);
+    //row.find('td[data-productname]').data("productname", rowValues.productNameVal);
+    row.find('td[data-productname]').attr('data-productname', rowValues.productNameVal);
+    //row.find('td[data-productname]').data("productname", rowValues.productName);
+    row.find('td[data-hsnno]').attr('data-hsnno', rowValues.hsnNo);
+    //row.find('td[data-uom]').data("uom", rowValues.uomVal);
+    row.find('td[data-uom]').attr('data-uom', rowValues.uomVal);
+
+    //row.find('td[data-qty]').data("qty", rowValues.quantity);
+    row.find('td[data-qty]').attr('data-qty', rowValues.quantity);
+    //row.find('td[data-rate]').data("rate", rowValues.rate);
+    row.find('td[data-rate]').attr('data-rate', rowValues.rate);
+
+    //row.find('td[data-tax]').data("tax", rowValues.taxVal);
+    //row.find('td[data-gst]').data("gst", rowValues.tax);
+    row.find('td[data-tax]').attr('data-tax', rowValues.taxVal);
+    row.find('td[data-gst]').attr('data-gst', rowValues.tax);
+
+    row.find('td[data-rowtotal]').attr('data-rowtotal', rowValues.total);
+
+    console.log(rowValues.taxVal + ' ' + rowValues.tax);
+    console.log($('#childTableBody tr').html());
 
     recalculateTotals();
 
+    clearDropdownTextboxes();
 }
 
+//var temp = 1;
+function deleteSelectedRows() {
+    if (document.querySelectorAll('input[type="checkbox"]:checked').length == 0) {
+        alert('Select row(s) to delete ...');
+        return;
+    }
+    if (confirm("Do you wish to delete?")) {
+        // code to delete the item goes here
+        document.querySelectorAll('#childTableBody .form-check-input:checked').forEach(e => {
+            e.parentNode.parentNode.remove()
+        });
+        recalculateTotals();
 
+        var tableSize = $('#childTableBody tr').length;
+        if (tableSize == 0) {
+            document.getElementById("deleteRow").disabled = true;
+        }
+    } else {
+        // do nothing or handle cancellation
+    }
+}
+
+function resetDropdownTextboxes() {
+    clearDropdownTextboxes();
+
+}
 
 function recalculateTotals() {
 
@@ -449,20 +501,28 @@ function recalculateTotals() {
     let sgstTotal = 0;
     var rowTotal = 0;
     var gstRate = 0;
+    var gstRateVal = 0;
     var discount = 0;
 
     $('#childTableBody tr').each(function (rowIndex, row) {
         // Initialize an object to store the column values of the current row
         var rowData = {};
 
-        rowTotal = parseFloat($(row).find('[data-rowtotal]').data('rowtotal'));
+        rowTotal = parseFloat($(row).find('td[data-rowtotal]').attr('data-rowtotal'));
+        //rowTotal = parseFloat($(row).find('[data-rowtotal]').data('rowtotal'));
         subTotal = parseFloat(subTotal) + rowTotal;
-        gstRate = parseFloat($(row).find('[data-gst]').data('gst'));
-        cgstTotal = cgstTotal + (rowTotal * (gstRate * 0.5)/100);
-        sgstTotal = sgstTotal + (rowTotal * (gstRate * 0.5)/100);
+        gstRate = parseFloat($(row).find('td[data-gst]').attr('data-gst'));
+        //if (gstRate.val() != '' && !isNaN(gstRate.val())) {
+        //    gstRateVal = (gstRate.val()).toFixed(2);
+        //}
+        //row.find('td[data-gst]').attr('data-gst');
+        //gstRate = parseFloat($(row).find('[data-gst]').data('gst'));
+        //gstRate = parseFloat($(row).find('[data-tax]').data('tax'));
+        cgstTotal = cgstTotal + (rowTotal * (gstRate * 0.5) / 100);
+        sgstTotal = sgstTotal + (rowTotal * (gstRate * 0.5) / 100);
     });
 
-    if ($('#discount').val() !='' && !isNaN(($('#discount').val()))){
+    if ($('#discount').val() != '' && !isNaN(($('#discount').val()))) {
         discount = parseFloat($('#discount').val()).toFixed(2);
     }
 
@@ -475,7 +535,28 @@ function recalculateTotals() {
 
 }
 
+function clearDropdownTextboxes() {
+    itemDropdown.setChoiceByValue("0");
+    uomDropdown.setChoiceByValue("0");
+    taxDropdown.setChoiceByValue("0");
 
+    $('#hsnNo').val('');
+    $('#qty').val('');
+    $('#rate').val('');
+    $('#rowTotal').val('');
+
+    // Enable/Disable Action buttons
+    document.getElementById("addRow").disabled = false;
+    document.getElementById("editRow").disabled = true;
+    var tableSize = $('#childTableBody tr').length;
+    if (tableSize == 0) {
+        document.getElementById("deleteRow").disabled = true;
+    }
+    else {
+        document.getElementById("deleteRow").disabled = false;
+    }
+
+}
 
 function addBlankRow_deprecated() {
     // Create a new row
@@ -622,7 +703,7 @@ function addBlankRow_deprecated() {
 function initializeDropdown(newDropdown) {
     //var element = genericExamples[i];
     new Choices(newDropdown, {
-        allowHTML: true,
+        //allowHTML: true,
         placeholderValue: "This is a placeholder set in the config",
         searchPlaceholderValue: "Search",
     });
@@ -648,12 +729,14 @@ function changeQty(actionbutton, actionType) {
 }
 
 function CalculateRowTotal() {
-
     var qtyValue = $('#qty').val();
     var rateValue = $('#rate').val();
 
-    if (isNaN(qtyValue) || isNaN(rateValue)) {
-         return; 
+    //if (isNaN(qtyValue) || isNaN(rateValue)) {
+    //    return;
+    //}
+    if (!qtyValue || !rateValue || isNaN(qtyValue) || isNaN(rateValue)) {
+        return
     }
 
     qtyValue = parseFloat(qtyValue);
@@ -664,58 +747,193 @@ function CalculateRowTotal() {
 
 }
 
+function CheckDuplicatesProducts(itemId) {
+    var isValid = false;
+    $('#childTableBody tr').each(function (rowIndex, row) {
+        let rowitemId = $(row).find('[data-productname]').data('productname');
+
+        if (rowitemId == itemId) {
+            isValid = true;
+            return isValid;
+        }
+    });
+    return isValid;
+}
+
+/**
+ * Check for duplicate products in the product detail table.
+ * 
+ * @param {string} tableId - The ID of the product detail table element.
+ * @param {number} columnIndex - The index of the column to check for duplicates (0-based).
+ * @returns {boolean} True if no duplicates are found, false otherwise.
+ */
+function checkForDuplicateProducts(tableId, columnIndex) {
+    // Get the product detail table element
+    var tableproductDetail = document.getElementById(tableId);
+    if (!tableproductDetail) {
+        throw new Error(`Table element with ID '${tableId}' not found`);
+    }
+
+    // Get the rows of the product detail table
+    var rows = tableproductDetail.rows;
+
+    // Create a set to store unique product values and an array to store duplicate values
+    var uniqueValues = new Set();
+    var duplicateValues = [];
+
+    for (var i = 0; i < rows.length; i++) {
+        // Get the text content of the specified cell in the current row
+        var value = rows[i].cells[columnIndex].textContent;
+
+        if (uniqueValues.has(value)) {
+            duplicateValues.push(value);
+        } else {
+            uniqueValues.add(value);
+        }
+    }
+
+    // Check if there are any duplicate values
+    if (duplicateValues.length > 0) {
+        alert('Duplicate Product found: ' + duplicateValues);
+        console.log('Duplicate values:', duplicateValues);
+        return false;
+    }
+    return true;
+}
+
+$(document).on('click', '#deleteChallan', function (e) {
+    //alert('Are you sure you want to delete this Challan?');
+
+    $('#loader').show();
+
+    $.ajax({
+        type: 'POST',
+        //contentType: 'application/json',
+        dataType: 'json',
+        url: (window.location.origin + '/AR/Challan/DeleteChallan'),
+        data: { challanId: 111 },
+        success: function (response) {
+            $('#loader').hide();
+            //let redirectUrl = window.location.origin + "/AR/Challan/Index";
+            //window.location.href = redirectUrl;
+            if (response.success) {
+                //alert('Challan status: Deleted');
+                let redirectUrl = window.location.origin + "/AR/Challan/Index";
+                window.location.href = redirectUrl;
+                //setTimeout(function () {
+                //    console.log("Redirecting to Index page");
+                //    window.location.href = redirectUrl;
+                //}, 2000);
+
+            } else {
+                //alert('Challan status: Not Deleted');
+            }
+
+        },
+        error: function (er) {
+            $('#loader').hide();
+        }
+    });
+
+    //$.ajax({
+    //    type: 'POST',
+    //    //contentType: 'application/json',
+    //    dataType: 'json',
+    //    url: (window.location.origin + '/AR/Challan/DeleteChallan'),
+    //    data: { challanId: 111 },
+    //    success: function (response) {
+    //        if (response.success) {
+    //            alert('Challan status: Deleted');
+    //            let redirectUrl = window.location.origin + "/AR/Challan/Index";
+    //            setTimeout(function () {
+    //                console.log("Redirecting to Index page");
+    //                window.location.href = redirectUrl;
+    //            }, 2000);
+    //        } else {
+    //            alert('Error: ' + response.error);
+    //        }
+    //    },
+    //    error: function (er) {
+    //        $('#loader').hide();
+    //    }
+    //});
+
+});
+
 $(document).on('click', '#saveChallan', function (e) {
 
+
     e.preventDefault();
+
     hideTabValidationError();
-    
+
     if (!$("#frmChallan").valid()) {
         console.log("invalid form challan");
         return false;
     }
 
-    //return;
+    var tableSize = $('#childTableBody tr').length;
+    if (tableSize == 0) {
+        alert('Challan should have atleast one Product detail');
+        return false;
+    }
 
-    //let challanId = 0;
+    // Check for duplicate products in the product detail table
+    // 1 for cell/column name/position
+    if (!checkForDuplicateProducts('productDetailTable', 1)) {
+        return false;
+    }
 
-    let challanId = parseInt(document.getElementById("challanId").value);
-    let customerId = document.getElementById("customerID").value;
+    let challanId = parseInt(document.getElementById("ChallanID").value);
+    let customerId = document.getElementById("CustomerID").value;
     let billAddressId = document.getElementById("billAddressId").value;
     let shipAddressId = document.getElementById("shipAddressId").value;
-    let challanNo = document.getElementById("challanNo").value;
     let currency = document.getElementById("currency").value;
+    let challanno = document.getElementById("ChallanNo").value;
+    let finYear = parseInt(document.getElementById("finYear").value);
     let issuedDate = document.getElementById("issuedDate").value;
     let purchaseOrder = document.getElementById("purchaseOrder").value;
     let poDate = document.getElementById("poDate").value;
     let note = document.getElementById("note").value;
+    let netamount = document.getElementById("subTotal").value;
+    let discountamount = document.getElementById("discount").value;
     let cgst = document.getElementById("cgst").value;
     let sgst = document.getElementById("sgst").value;
     let totalAmount = document.getElementById("grandTotal").value;
-    
+
+    //var select = document.getElementById("currency");
+    //var selectedOption = select.options[select.selectedIndex];
+    console.log('...............' + currency);
+
     let challanData = {
         "ChallanID": challanId,
         "CustomerID": customerId,
         "BillAddressID": billAddressId,
         "ShipAddressID": shipAddressId,
-        "ChallanNo": challanNo,
+        "Currency": currency,
+        "ChallanNo": challanno,
+        "FAYear": finYear,
         "ChallanDate": issuedDate,
         "PurchaseOrderNo": purchaseOrder,
         "PurchaseOrderDate": poDate,
         "Description": note,
+        "NetAmount": netamount,
+        "DiscountAmount": discountamount,
         "CGSTAmount": cgst,
         "SGSTAmount": sgst,
         "TotalAmount": totalAmount
     };
 
-   // Loop and read data from the html table for ARCHallanDetails
+    // Loop and read data from the html table for ARCHallanDetails
 
     const archallanDetails = [];
-
     const table = document.getElementById('productDetailTable');
-
+    //console.log('Innerhtml:....' + table.innerHTML);
     // Loop through the rows (skip the header row)
     for (let i = 1; i < table.rows.length; i++) {
         const row = table.rows[i];
+
+        //console.log(row.html);
         const archallanDetail = {
             //StatusID: row.cells[0].textContent,
             ItemID: row.cells[1].getAttribute("data-productname"),
@@ -723,13 +941,18 @@ $(document).on('click', '#saveChallan', function (e) {
             Uom: row.cells[3].getAttribute("data-uom"),
             Quantity: row.cells[4].getAttribute("data-qty"),
             Rate: row.cells[5].getAttribute("data-rate"),
-            //GSTRateID: row.cells[6].getAttribute("data-taxItemRate"), -- add ItemId GST Rate
-            GSTRateTypeID: row.cells[6].getAttribute("data-tax"),
+            //GSTRateID: row.cells[6].getAttribute("data-taxItemRate"), /*- add ItemId GST Rate*/
+
+            //GSTRateID: row.cells[6].getAttribute("data-tax"), //data-gst
+            GSTRateID: row.cells[6].getAttribute("data-tax"),
             Total: row.cells[7].getAttribute("data-rowtotal"),
             // Add other properties as needed
         };
         archallanDetails.push(archallanDetail);
     }
+
+    //console.log(challanData);
+    console.log(archallanDetails);
 
     const requestData = {
         challan: challanData,
@@ -745,8 +968,6 @@ $(document).on('click', '#saveChallan', function (e) {
     const jsonRequestBody = JSON.stringify(requestData);
 
     //Body should comtain Challan and Challan Details
-    //console.log(jsonRequestBody);
-    //return false;
 
     $('#loader').show();
     $.ajax({
@@ -761,9 +982,9 @@ $(document).on('click', '#saveChallan', function (e) {
                 let challanId = 0;
                 //challanId = response.ChallanId;
                 if (challanId === 0) {
-                    challanId = parseInt(response.data.challanId);
-                    document.getElementById("challanId").value = challanId;
-                    
+                    challanId = parseInt(response.data.ChallanID);
+                    document.getElementById("ChallanID").value = challanId;
+
                     let redirectUrl = window.location.origin + "/AR/Challan/Index";
                     setTimeout(function () {
                         console.log("Redirecting to Index page");
@@ -777,7 +998,6 @@ $(document).on('click', '#saveChallan', function (e) {
         }
     });
 });
-
 
 function SetupFormValidation() {
 
@@ -815,6 +1035,7 @@ function SetupFormValidation() {
 
 
     $("#frmChallan").validate({
+
         errorClass: "invalid-form-control",
         ignore: "",
         invalidHandler: function (event, validator) {
@@ -822,8 +1043,9 @@ function SetupFormValidation() {
                 showTabValidationError();
             });
         },
+
         rules: {
-            customerID: {
+            CustomerID: {
                 required: true
             },
             billAddressId: {
@@ -832,7 +1054,7 @@ function SetupFormValidation() {
             shipAddressId: {
                 required: true
             },
-            challanNo: {
+            ChallanNo: {
                 required: true,
                 maxlength: 20
             },
@@ -841,11 +1063,14 @@ function SetupFormValidation() {
             },
             currency: {
                 required: true
+            },
+            grandTotal: {
+                required: true
             }
         },
         messages: {
-            customerID: {
-                required: "Select a customer"
+            CustomerID: {
+                required: "Select Customer"
             },
             billAddressId: {
                 required: "Select billing address"
@@ -853,39 +1078,107 @@ function SetupFormValidation() {
             shipAddressId: {
                 required: "Select shipping address"
             },
-            challanNo: {
+            ChallanNo: {
                 required: "Enter challan",
-                maxlength: "challan length should not exceed 20 characters"
+                maxlength: "Challan length should not exceed 20 characters"
             },
             issuedDate: {
-                required: "select challan issued date"
+                required: "Select challan issued date"
             },
             currency: {
-                required: "select currency"
+                required: "Select currency"
+            },
+            grandTotal: {
+                required: "Challan should have valid amount"
             }
         }
     });
 
-   
+
 
 };
 
 
-
 // Document Ready function
-
 let itemDropdown;
 let uomDropdown;
 let taxDropdown;
+let currencyDropdown;
+//let customerDropdown;
 
 $(document).ready(function () {
 
     //SetupDataTables();
 
+    var actionVal = localStorage.getItem('actionMode') || sessionStorage.getItem('actionMode');
+    if (actionVal) {
+        document.getElementById('ActionVal').value = actionVal; // Set value to an element (input, textarea, etc.)
+        //alert(action);
+        sessionStorage.removeItem('actionMode');
+        localStorage.removeItem('actionMode');
+    }
+
+    //>> EditChallan Function Starts
+    if (viewModel && viewModel.Challan && viewModel.Challan.ChallanID > 0) {
+
+        //console.log(viewModel.Challan.ChallanID);
+        $('#ChallanID').val(viewModel.Challan.ChallanID);
+        $('#ChallanNo').val(viewModel.Challan.ChallanNo);
+        $('#issuedDate').val(viewModel.Challan.ChallanDate);
+        $('#CustomerID').val(viewModel.Challan.CustomerID);
+        $('#billAddressId').val(viewModel.Challan.BillAddressID);
+        $('#shipAddressId').val(viewModel.Challan.shipAddressId);
+        $('#finYear').val(isNaN(viewModel.Challan.FAYear) ? '' : viewModel.Challan.FAYear);
+        $('#purchaseOrder').val(viewModel.Challan.PurchaseOrderNo);
+        $('#poDate').val(viewModel.Challan.PurchaseOrderDate);
+        $('#note').val(viewModel.Challan.Description);
+        $('#currency').val(viewModel.Challan.Currency);
+        $('#subtotal').val(viewModel.Challan.NetAmount);
+        $('#discount').val(viewModel.Challan.DiscountAmount.toFixed(2));
+        $('#cgst').val(viewModel.Challan.CGSTAmount);
+        $('#sgst').val(viewModel.Challan.SGSTAmount);
+        $('#grandTotal').val(viewModel.Challan.NetAmount);
+        console.log("Currency: ............." + viewModel.Challan.Currency.toString());
+        console.log("Customer: ............." + viewModel.Challan.CustomerID.toString());
+
+        viewModel.ChallanItems.forEach(function (item) {
+            // Construct the HTML for the new row in the child table
+            //alert(item.CGST_Rate.toString());
+            var taxString = item.GSTType + " [ " + item.CGST_Rate.toFixed(2).toString() + "% ]"
+            var rowcnt = $('#childTableBody tr').length;
+            var newRowHtml = '<tr>';
+            newRowHtml += '<td><input type="checkbox" id="row' + rowcnt + '" class="form-check-input"></td>'; // Checkbox column
+            newRowHtml += '<td data-productname="' + item.ItemID + '" ><a href="#" onclick="selectRow(' + rowcnt + ');event.preventDefault();">' + item.ItemName + '</a></td>'; // Product Name
+            newRowHtml += '<td data-hsnno="' + item.HSNCode + '">' + item.HSNCode + '</td>'; // HSN No
+            newRowHtml += '<td data-uom="' + item.Uom + '">' + item.UOMType + '</td>'; // UOM
+            newRowHtml += '<td data-qty="' + item.Quantity + '">' + item.Quantity + '</td>'; // Quantity
+            newRowHtml += '<td data-rate="' + item.Rate + '">' + item.Rate + '</td>'; // Rate
+            //newRowHtml += '<td data-tax="' + item.GSTRateID + '" data-gst="' + item.GSTType + '">' + item.GSTType + '</td>'; // Tax
+            newRowHtml += '<td data-tax="' + item.GSTRateID + '" data-gst="' + item.CGST_Rate + '">' + taxString + '</td>'; // Tax
+
+            newRowHtml += '<td data-rowTotal="' + item.Total + '">' + item.Total + '</td>'; // Total
+            newRowHtml += '</tr>';
+
+            // Append the new row to the child table
+            $('#childTableBody').append(newRowHtml);
+
+            console.log('document ready ' + newRowHtml);
+        });
+
+
+        ShowHideAddress(viewModel.Challan.CustomerID);
+
+        recalculateTotals();
+
+        //clearDropdownTextboxes();
+    };
+    //>> EditChallan Function Ends
+
     SetupFormValidation();
 
-    document.getElementById("customerID").addEventListener('change', ShowHideAddress);
+    document.getElementById("CustomerID").addEventListener('change', ShowHideAddress);
     document.getElementById("discount").addEventListener('change', recalculateTotals);
+
 
     // Date issued 
     flatpickr("#issuedDate", {});
@@ -928,39 +1221,67 @@ $(document).ready(function () {
         }
     });
 
+
     document.getElementById("qty").addEventListener('change', CalculateRowTotal);
     document.getElementById("rate").addEventListener('change', CalculateRowTotal);
 
-    //document.getElementById("addInvDetailRow").addEventListener("click", function () {
-    //    //addRow();
-    //    addBlankRow();
-    //});
-
-      //* QTY spinner END */
-
     let itemChoicesArray = [
-        { value: 0, label: ' Select Item ' },
-        { value: 48, label: 'Box Printing - 911' },
-        { value: 51, label: 'A/5 PAMPHLET PRINT- 8443' },
-        { value: 191, label: 'SMART CARD PRINT - 555' },
-        { value: 123, label: 'C.S PLOTTER - 480255' },
+        //{ value: 0, label: ' Select Product ' },
+        //{ value: 48, label: 'Box Printing - 911' },
+        //{ value: 51, label: 'A/5 PAMPHLET PRINT- 8443' },
+        //{ value: 191, label: 'SMART CARD PRINT - 555' },
+        //{ value: 123, label: 'C.S PLOTTER - 480255' },
         // Add additional options here if needed
     ];
 
-    itemDropdown = new Choices(document.getElementById('itemId1'), { choices: itemChoicesArray, shouldSort: false, itemSelectText: ''  });
-    itemDropdown.setChoiceByValue("0");
-
+    itemDropdown = new Choices(document.getElementById('itemId1'), { choices: itemChoicesArray, shouldSort: false, itemSelectText: '' });
     uomDropdown = new Choices(document.getElementById('uom'), { shouldSort: false, itemSelectText: '' });
     taxDropdown = new Choices(document.getElementById('taxType'), { shouldSort: false, itemSelectText: '' });
-
+    currencyDropdown = new Choices(document.getElementById('currency'), { shouldSort: false, itemSelectText: '' });
+    //customerDropdown = new Choices(document.getElementById('CustomerID'), { shouldSort: false, itemSelectText: '' });
 
     //var event = new Event('change', { bubbles: true });
     //itemDropdown.dispatchEvent(event);
 
     setupProductDetailValidationRules();
 
-});
+    clearDropdownTextboxes();
 
+    var tableSize = $('#childTableBody tr').length;
+    if (tableSize == 0) {
+        document.getElementById("deleteRow").disabled = true;
+    }
+    else {
+        document.getElementById("deleteRow").disabled = false;
+    }
+    document.getElementById("editRow").disabled = true;
+    //document.getElementById("deleteRow").disabled = true;
+
+    if (viewModel && viewModel.Challan && viewModel.Challan.ChallanID > 0 && actionVal == 'delete') {
+        $('#frmChallan').find('input, select, button, textarea').prop('disabled', true);
+
+        $('#deleteChallan').removeAttr('hidden');
+        $('#saveChallan').attr('hidden', 'hidden');
+        $('#back').removeAttr('disabled');
+        $('#deleteChallan').removeAttr('disabled');
+        //$('#CustomerID').attr('disabled');
+        //document.getElementById('CustomerID').disabled = false
+        $('#CustomerID').prop('disabled', true);
+
+        itemDropdown.disable();
+        uomDropdown.disable();
+        taxDropdown.disable();
+        currencyDropdown.disable();
+        //customerDropdown.disable();
+        $('#childTableBody tr').each(function () {
+            $(this).find('input, select, button').prop('disabled', true);
+            $(this).find('a').on('click', function (event) {
+                event.preventDefault(); // Prevent the default link action (navigation)
+            }).css('pointer-events', 'none'); // Optionally disable clicking using CSS
+        });
+    }
+
+});
 
 
 function setupProductDetailValidationRules() {
@@ -970,53 +1291,53 @@ function setupProductDetailValidationRules() {
         if (value == null || value == undefined || value == '' || value == '0') {
             return false;
         }
-        else { 
+        else {
             return true;
         }
-   
+
     }, '');
 }
 
 
- function validateProductDetails() {
+function validateProductDetails() {
 
 
-     // Validate each input field individually
-     var displayError = false;
-     $("#productValidationError").empty();
+    // Validate each input field individually
+    var displayError = false;
+    $("#productValidationError").empty();
 
-     $.each(validationRules, function (field, rules) {
-         var value = $("#" + field).val();
-         var errorMessage = "";
-        
-         // Check each validation rule
-         $.each(rules, function (rule, ruleValue) {
-             if (rule === "required" && ruleValue && !value) {
-                 errorMessage = validationMessages[field][rule];
-             } else if (rule === "maxlength" && value.length > ruleValue) {
-                 errorMessage = validationMessages[field][rule];
-             } else if (rule === "email" && !isValidEmail(value)) {
-                 errorMessage = validationMessages[field][rule];
-             }
-             else if (rule === "choiceValidation" && ruleValue && !isValidChoiceDropdown(value)) {
-                 errorMessage = validationMessages[field][rule];
-             }
-         });
+    $.each(validationRules, function (field, rules) {
+        var value = $("#" + field).val();
+        var errorMessage = "";
+
+        // Check each validation rule
+        $.each(rules, function (rule, ruleValue) {
+            if (rule === "required" && ruleValue && !value) {
+                errorMessage = validationMessages[field][rule];
+            } else if (rule === "maxlength" && value.length > ruleValue) {
+                errorMessage = validationMessages[field][rule];
+            } else if (rule === "email" && !isValidEmail(value)) {
+                errorMessage = validationMessages[field][rule];
+            }
+            else if (rule === "choiceValidation" && ruleValue && !isValidChoiceDropdown(value)) {
+                errorMessage = validationMessages[field][rule];
+            }
+        });
 
         //Display error message if validation fails
-         if (errorMessage) {
-             //$("#" + field).after("<div class='invalid-form-control'>" + errorMessage + "</div>");
-             $("#productValidationError").append("" + errorMessage + "<br>");
-             displayError = true;
-         }
+        if (errorMessage) {
+            //$("#" + field).after("<div class='invalid-form-control'>" + errorMessage + "</div>");
+            $("#productValidationError").append("" + errorMessage + "<br>");
+            displayError = true;
+        }
 
-     });
+    });
 
-     return !displayError;
+    return !displayError;
 }
 
 function isValidChoiceDropdown(value) {
-    if (value == null || value == undefined || value == '' || value == '0') {
+    if (value == null || value == undefined || value == '' || value == '0' || value == 0) {
         return false;
     }
     else {
@@ -1024,42 +1345,46 @@ function isValidChoiceDropdown(value) {
     }
 }
 
-  var validationRules = {
-      itemId1: {
-          choiceValidation: true
-        },
-        uom: {
-            choiceValidation: true
-        },
-      qty: {
-            required: true,
-            digits: true
-        },
-      rate: {
-          required: true,
-          number: true
-      },
-      taxType: {
-          choiceValidation: true
-      }
-    };
+var validationRules = {
+    itemId1: {
+        choiceValidation: true
+    },
+    uom: {
+        choiceValidation: true
+    },
+    qty: {
+        choiceValidation: true,
+        required: true,
+        digits: true
+    },
+    rate: {
+        choiceValidation: true,
+        required: true,
+        number: true
+    },
+    taxType: {
+        choiceValidation: true
+    }
+};
 
-  var validationMessages = {
-        itemId1: {
-            choiceValidation: "Please select a valid value for Product"
-        },
-        uom: {
-            choiceValidation: "Please select a valid value for UOM"
-        },
-        qty: {
-            required: "Please enter quantity",
-            digits: "Please enter a numeric value"
-        },
-        rate: {
-            required: "Please enter the rate",
-            number: "Please enter a numeric value"
-        },
-        taxType: {
-            choiceValidation: "Please select a valid value for GST Type"
-        },
-    };
+var validationMessages = {
+    itemId1: {
+        choiceValidation: "Please select a valid value for Product"
+    },
+    uom: {
+        choiceValidation: "Please select a valid value for UOM"
+    },
+    qty: {
+        choiceValidation: "Please enter valid quantity",
+        required: "Please enter quantity",
+        digits: "Please enter a numeric value"
+    },
+    rate: {
+        choiceValidation: "Please enter valid rate",
+        required: "Please enter rate",
+        number: "Please enter a numeric value"
+    },
+    taxType: {
+        choiceValidation: "Please select a valid value for GST Type"
+    },
+};
