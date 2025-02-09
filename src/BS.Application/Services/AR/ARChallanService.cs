@@ -50,16 +50,22 @@ public class ARChallanService : IARChallanService
 
     public async Task<ResultVM> SaveChallan(ARChallan challan, IEnumerable<ARChallanDetail> challanItems)
     {
+        int existingChallanId = challan.ChallanID;
         int challanId = await arDBRepository.SaveChallan(challan, challanItems);
         challan.ChallanID = challanId;
-        if (challanId > 0) {
+        if (challanId > 0 && existingChallanId == 0)
+        {
             return new ResultVM() { IsSuccess = true, Messages = new string[] { $"new challan {challanId} added successfully" } };
+        }
+        else if (challanId > 0 && challanId == existingChallanId)
+        {
+            return new ResultVM() { IsSuccess = true, Messages = new string[] { $"challan with Id - {challanId} updated successfully" } };
         }
         else
         {
             return new ResultVM() { IsSuccess = false, Messages = new string[] { $"some error occured when saving the challan" } };
         }
-        
+
     }
 
     public async Task<ResultVM> SaveChallan(ARChallan challan)

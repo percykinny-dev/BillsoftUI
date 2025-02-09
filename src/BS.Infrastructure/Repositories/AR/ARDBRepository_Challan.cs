@@ -110,14 +110,15 @@ public partial class ARDBRepository
 
     public async Task<int> SaveChallan(ARChallan challan, IEnumerable<ARChallanDetail> challanItems)
     {
-        int insertedChallanID = 0;
+        int challanID = 0;
         using (var sqlConnection = new SqlConnection(connectionString))
         {
             var command = sqlConnection.CreateCommand();
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.CommandText = $"[dbo].[pAR_InsertChallan]";
+            //command.CommandText = $"[dbo].[pAR_InsertChallan]";
+            command.CommandText = $"[dbo].[pAR_SaveChallan]";
 
-           
+            command.Parameters.AddWithValue("@ChallanID", challan.ChallanID);
             command.Parameters.AddWithValue("@ChallanNo", challan.ChallanNo);
             command.Parameters.AddWithValue("@ChallanDate", challan.ChallanDate);
             command.Parameters.AddWithValue("@CompanyID", challan.CompanyID);
@@ -156,7 +157,7 @@ public partial class ARDBRepository
             table.Columns.Add("IGSTAmount", typeof(decimal));
             table.Columns.Add("InvoiceId", typeof(int));
             table.Columns.Add("Total", typeof(decimal));
-            
+
             foreach (var detail in challanItems)
             {
                 table.Rows.Add(
@@ -164,11 +165,11 @@ public partial class ARDBRepository
                                 0,
                                 0,
                                 1,
-                                detail.ItemID, 
+                                detail.ItemID,
                                 detail.HSNCode,
-                                detail.Quantity, 
-                                detail.Uom, 
-                                detail.Rate, 
+                                detail.Quantity,
+                                detail.Uom,
+                                detail.Rate,
                                 detail.Amount,
                                 0,
                                 detail.GSTRateID,
@@ -176,7 +177,7 @@ public partial class ARDBRepository
                                 detail.CGSTAmount,
                                 detail.SGST,
                                 detail.SGSTAmount,
-                                detail.IGST, 
+                                detail.IGST,
                                 detail.IGSTAmount,
                                 0,
                                 detail.Total
@@ -191,8 +192,8 @@ public partial class ARDBRepository
                 try
                 {
                     command.Connection.Open();
-                    insertedChallanID = (int) await command.ExecuteScalarAsync();
-                    
+                    challanID = (int)await command.ExecuteScalarAsync();
+
                 }
                 catch (Exception ex)
                 {
@@ -204,6 +205,6 @@ public partial class ARDBRepository
                 }
             }
         }
-        return insertedChallanID;
+        return challanID;
     }
 }
