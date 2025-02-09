@@ -789,23 +789,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\panka\\.nuget\\packages\\": {},
+    "C:\\Users\\percy\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\BillSoftDevNew\\BillSoftUI\\src\\BS.Application\\BS.Application.csproj",
+      "projectUniqueName": "D:\\Projects\\BillSoft\\code\\PankajBhai\\Repos\\BillsoftUI\\src\\BS.Application\\BS.Application.csproj",
       "projectName": "BS.Application",
-      "projectPath": "D:\\Projects\\BillSoftDevNew\\BillSoftUI\\src\\BS.Application\\BS.Application.csproj",
-      "packagesPath": "C:\\Users\\panka\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\BillSoftDevNew\\BillSoftUI\\src\\BS.Application\\obj\\",
+      "projectPath": "D:\\Projects\\BillSoft\\code\\PankajBhai\\Repos\\BillsoftUI\\src\\BS.Application\\BS.Application.csproj",
+      "packagesPath": "C:\\Users\\percy\\.nuget\\packages\\",
+      "outputPath": "D:\\Projects\\BillSoft\\code\\PankajBhai\\Repos\\BillsoftUI\\src\\BS.Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\panka\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\percy\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -814,14 +814,15 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\Projects\\BillSoftDevNew\\BillSoftUI\\src\\BS.Domain\\BS.Domain.csproj": {
-              "projectPath": "D:\\Projects\\BillSoftDevNew\\BillSoftUI\\src\\BS.Domain\\BS.Domain.csproj"
+            "D:\\Projects\\BillSoft\\code\\PankajBhai\\Repos\\BillsoftUI\\src\\BS.Domain\\BS.Domain.csproj": {
+              "projectPath": "D:\\Projects\\BillSoft\\code\\PankajBhai\\Repos\\BillsoftUI\\src\\BS.Domain\\BS.Domain.csproj"
             }
           }
         }
@@ -891,7 +892,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }

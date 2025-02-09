@@ -48,6 +48,7 @@ Thumbs.db
 *.mov
 *.wmv
 
+# ignore bin and obj files
 /.vs
 /src/BS.Application/bin/Debug/net6.0
 /src/BS.Application/obj
