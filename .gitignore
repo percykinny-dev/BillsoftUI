@@ -50,6 +50,7 @@ Thumbs.db
 
 # ignore bin and obj files
 /.vs
+/src/BS.Application/bin
 /src/BS.Application/bin/Debug/net6.0
 /src/BS.Application/obj
 /src/BS.Domain/bin/Debug/net6.0
