@@ -64,11 +64,15 @@ namespace BS.UI.Web.Controllers
             pageSize = length;
 
 
-            QueryFilter queryFilter = new QueryFilter();
+            ChallanQueryFilter queryFilter = new ChallanQueryFilter();
             queryFilter.PageNumber = page;
             queryFilter.PageSize = pageSize;
             queryFilter.SearchText = Request.Form["search[value]"];
             queryFilter.SortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"];
+
+            //fill values for the ChallanQueryFilter parameters
+            //queryFilter.ChallanNo = Request.Form["searchChallanNo"];
+            //queryFilter.CustomerName = Request.Form["searchCustomerName"];
 
             var challans = await challanService.GetChallansList(BSCompanyId, queryFilter, null);
 

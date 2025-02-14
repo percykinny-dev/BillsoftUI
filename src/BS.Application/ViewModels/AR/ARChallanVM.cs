@@ -156,3 +156,15 @@ public class ARChallanItemsVM
     public decimal IGST_Rate { get; set; }
 
 }
+
+public class ChallanQueryFilter : QueryFilter
+{
+    public string ChallanNo { get; set; }
+    public string CustomerName { get; set; }
+    public string ProductName { get; set; }
+    public DateTime? ChallanDateFrom { get; set; }
+    public DateTime? ChallanDateTo { get; set; }
+    public byte? ChallanStatus { get; set; }
+    public decimal? ChallanAmountFrom { get; set; }
+    public decimal? ChallanAmountTo { get; set; }
+}

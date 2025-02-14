@@ -39,7 +39,7 @@ public interface IARDBRepository
     
 
     //CHALLANS
-    Task<(IEnumerable<ARChallanVM>, int)> GetChallansList(int companyId, QueryFilter queryFilter, string[] allowedStatuses);
+    Task<(IEnumerable<ARChallanVM>, int)> GetChallansList(int companyId, ChallanQueryFilter queryFilter, string[] allowedStatuses);
 
     Task<ARChallanDetailVM> GetChallanDetailVM(int companyId, int challanId);
 

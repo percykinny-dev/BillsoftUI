@@ -75,7 +75,7 @@ public partial class ARDBRepository
         return data;
     }
 
-    public async Task<(IEnumerable<ARChallanVM>, int)> GetChallansList(int companyId, QueryFilter queryFilter, string[] allowedStatuses)
+    public async Task<(IEnumerable<ARChallanVM>, int)> GetChallansList(int companyId, ChallanQueryFilter queryFilter, string[] allowedStatuses)
     {
         IEnumerable<ARChallanVM> challans = null;
         int totalCount = 0;
@@ -85,9 +85,24 @@ public partial class ARDBRepository
         {
             try
             {
+                // passing filter paramters to the ChallanQueryFilter.
+                // TO BE TESTED
                 using (var query = await connection.QueryMultipleAsync(sql,
-                    new { CompanyID = companyId, PageNo = queryFilter.PageNumber, PageSize = queryFilter.PageSize },
-                    commandType: System.Data.CommandType.StoredProcedure))
+                    new
+                    {
+                        CompanyID = companyId,
+                        PageNo = queryFilter.PageNumber,
+                        PageSize = queryFilter.PageSize,
+                        ChallanNo = queryFilter.ChallanNo,
+                        CustomerName = queryFilter.CustomerName,
+                        ProductName = queryFilter.ProductName,
+                        ChallanDateFrom = queryFilter.ChallanDateFrom,
+                        ChallanDateTo = queryFilter.ChallanDateTo,
+                        ChallanStatus = queryFilter.ChallanStatus,
+                        ChallanAmountFrom = queryFilter.ChallanAmountFrom,
+                        ChallanAmountTo = queryFilter.ChallanAmountTo
+                    },
+                commandType: System.Data.CommandType.StoredProcedure))
                 {
                     //returns multiple rows
                     challans = await query.ReadAsync<ARChallanVM>();

@@ -8,7 +8,6 @@ public partial class ARDBRepository : DBRepositoryBase, IARDBRepository
     }
 
     
-
     //MISC
     public Task<ARInvoiceDetailVM> CopySODetailsToInvoiceDetails(int companyId, int invoiceId, int salesOrderId)
     {
