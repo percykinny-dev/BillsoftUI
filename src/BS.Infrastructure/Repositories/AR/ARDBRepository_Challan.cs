@@ -125,6 +125,7 @@ public partial class ARDBRepository
 
     public async Task<int> SaveChallan(ARChallan challan, IEnumerable<ARChallanDetail> challanItems)
     {
+        //adding challanid
         int challanID = 0;
         using (var sqlConnection = new SqlConnection(connectionString))
         {
