@@ -23,7 +23,7 @@ public class ARChallanService : IARChallanService
     }
 
     //challans
-    public async Task<IEnumerable<ARChallanVM>> GetChallansList(int companyId, QueryFilter queryFilter, string[] allowedStatuses)
+    public async Task<IEnumerable<ARChallanVM>> GetChallansList(int companyId, ChallanQueryFilter queryFilter, string[] allowedStatuses)
     {
         var (challans, totalCount) = await arDBRepository.GetChallansList(companyId, queryFilter, allowedStatuses);
         queryFilter.RecordCount = totalCount;

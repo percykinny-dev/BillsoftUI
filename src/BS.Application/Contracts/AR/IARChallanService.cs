@@ -3,7 +3,7 @@
 public interface IARChallanService
 {
     //challans
-    public Task<IEnumerable<ARChallanVM>> GetChallansList(int companyId, QueryFilter queryFilter, string[] allowedStatuses);
+    public Task<IEnumerable<ARChallanVM>> GetChallansList(int companyId, ChallanQueryFilter queryFilter, string[] allowedStatuses);
 
     public Task<ARChallanDetailVM> GetChallanDetailVM(int companyId, int challanId);
 
