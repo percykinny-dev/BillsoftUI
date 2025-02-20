@@ -15,7 +15,7 @@ public partial class ARDBRepository
         {
             var command = sqlConnection.CreateCommand();
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.CommandText = $"[dbo].[procedure_name_goes_here]";
+            command.CommandText = $"[dbo].[pAR_DeleteChallan]";
 
             command.Parameters.Add(new SqlParameter() { ParameterName = "@CompanyID", Value = companyId });
             command.Parameters.Add(new SqlParameter() { ParameterName = "@ChallanID", Value = challanId });
@@ -50,7 +50,7 @@ public partial class ARDBRepository
             try
             {
                 using (var query = await connection.QueryMultipleAsync(sql,
-                    new { CompanyID = companyId, ChallanID = challanId }, 
+                    new { CompanyID = companyId, ChallanID = challanId },
                     commandType: System.Data.CommandType.StoredProcedure))
                 {
                     //returns single row
@@ -88,20 +88,32 @@ public partial class ARDBRepository
                 // passing filter paramters to the ChallanQueryFilter.
                 // TO BE TESTED
                 using (var query = await connection.QueryMultipleAsync(sql,
-                    new
-                    {
-                        CompanyID = companyId,
-                        PageNo = queryFilter.PageNumber,
-                        PageSize = queryFilter.PageSize,
-                        ChallanNo = queryFilter.ChallanNo,
-                        CustomerName = queryFilter.CustomerName,
-                        ProductName = queryFilter.ProductName,
-                        ChallanDateFrom = queryFilter.ChallanDateFrom,
-                        ChallanDateTo = queryFilter.ChallanDateTo,
-                        ChallanStatus = queryFilter.ChallanStatus,
-                        ChallanAmountFrom = queryFilter.ChallanAmountFrom,
-                        ChallanAmountTo = queryFilter.ChallanAmountTo
-                    },
+                   new
+                   {
+                       CompanyID = companyId,
+                       PageNo = queryFilter.PageNumber,
+                       PageSize = queryFilter.PageSize,
+                       ChallanNo = queryFilter.ChallanNo,
+                       CustomerName = queryFilter.CustomerName,
+                       ProductName = queryFilter.ProductName,
+                       ChallanDateFrom = queryFilter.ChallanDateFrom,
+                       ChallanDateTo = queryFilter.ChallanDateTo,
+                       ChallanAmountFrom = queryFilter.ChallanAmountFrom,
+                       ChallanAmountTo = queryFilter.ChallanAmountTo
+                   },
+                //new
+                //{
+                //    CompanyID = companyId, // Replace null with empty string
+                //    PageNo = queryFilter.PageNumber, // Replace null with empty string
+                //    PageSize = queryFilter.PageSize, // Replace null with empty string
+                //    ChallanNo = queryFilter.ChallanNo ?? "", // Replace null with empty string
+                //    CustomerName = queryFilter.CustomerName ?? "", // Replace null with empty string
+                //    ProductName = queryFilter.ProductName ?? "", // Replace null with empty string
+                //    ChallanDateFrom = queryFilter.ChallanDateFrom, // Replace null with empty string
+                //    ChallanDateTo = queryFilter.ChallanDateTo, // Replace null with empty string
+                //    ChallanAmountFrom = queryFilter.ChallanAmountFrom, // Replace null with empty string
+                //    ChallanAmountTo = queryFilter.ChallanAmountTo  // Replace null with empty string
+                //},
                 commandType: System.Data.CommandType.StoredProcedure))
                 {
                     //returns multiple rows
@@ -141,6 +153,11 @@ public partial class ARDBRepository
             command.Parameters.AddWithValue("@CustomerID", challan.CustomerID);
             command.Parameters.AddWithValue("@BillAddressID", challan.BillAddressID ?? 0);
             command.Parameters.AddWithValue("@ShipAddressID", challan.ShipAddressID ?? 0);
+            command.Parameters.AddWithValue("@FAYear", challan.FAYear);
+            command.Parameters.AddWithValue("@PurchaseOrderNo", challan.PurchaseOrderNo);
+            command.Parameters.AddWithValue("@PurchaseOrderDate", challan.PurchaseOrderDate);
+            command.Parameters.AddWithValue("@Currency", challan.Currency);
+            command.Parameters.AddWithValue("@Description", challan.Description?? "");
             command.Parameters.AddWithValue("@NetAmount", challan.NetAmount);
             command.Parameters.AddWithValue("@CGSTAmount", challan.CGSTAmount);
             command.Parameters.AddWithValue("@SGSTAmount", challan.SGSTAmount);
@@ -179,7 +196,7 @@ public partial class ARDBRepository
                 table.Rows.Add(
                                 //detail.ChallanDetailID, 
                                 0,
-                                0,
+                                challan.ChallanID,
                                 1,
                                 detail.ItemID,
                                 detail.HSNCode,
