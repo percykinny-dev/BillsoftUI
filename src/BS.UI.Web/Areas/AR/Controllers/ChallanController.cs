@@ -42,17 +42,10 @@ namespace BS.UI.Web.Controllers
         [HttpGet]
         [Route("")]
         [Route("Index")]
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             ViewBag.Resources = _resourceManager.GetResources();
-
-            var viewModel = new ARChallanDetailVM();
-
-            viewModel.SharedLists = await challanService.GetSharedListsVM(BSCompanyId, 0);
-
-            BindDropDowns(viewModel.SharedLists);
-
-            return View(viewModel);
+            return View();
         }
 
         [HttpPost]
@@ -72,15 +65,14 @@ namespace BS.UI.Web.Controllers
 
 
             ChallanQueryFilter queryFilter = new ChallanQueryFilter();
-
-            queryFilter.ChallanNo = Request.Form["ChallanNo"];
-            //queryFilter.CustomerName = Request.Form["CustomerName"];
-            //queryFilter.ProductName = Request.Form["ProductName"];
-
             queryFilter.PageNumber = page;
             queryFilter.PageSize = pageSize;
             queryFilter.SearchText = Request.Form["search[value]"];
             queryFilter.SortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"];
+
+            //fill values for the ChallanQueryFilter parameters
+            //queryFilter.ChallanNo = Request.Form["searchChallanNo"];
+            //queryFilter.CustomerName = Request.Form["searchCustomerName"];
 
             var challans = await challanService.GetChallansList(BSCompanyId, queryFilter, null);
 
@@ -117,60 +109,6 @@ namespace BS.UI.Web.Controllers
             return Json(response);
 
         }
-
-        /*
-        [HttpGet]
-        [Route("GetChallansList")]
-        public async Task<ActionResult> GetChallansList(string challanno, string search, int draw, int start, int length)
-        {
-            // Pagination setup
-            int page = (start / length) + 1;
-            int pageSize = length;
-
-            ChallanQueryFilter queryFilter = new ChallanQueryFilter
-            {
-                ChallanNo = challanno, // Get challanno from the query string
-                SearchText = search,   // Get search text from the query string
-                PageNumber = page,
-                PageSize = pageSize,
-                SortColumn = Request.Query["order[0][column]"] // Handle sorting if needed
-            };
-
-            // Get filtered data
-            var challans = await challanService.GetChallansList(BSCompanyId, queryFilter, null);
-
-            // Total records without filter
-            int totalRecords = queryFilter.RecordCount;
-
-            // Total records after applying filters
-            int filteredRecords = queryFilter.RecordCount;
-
-            // Prepare JSON response
-            var jsonData = challans.Select(challan => new
-            {
-                challanid = challan.ChallanID,
-                challanno = challan.ChallanNo,
-                challandate = challan.ChallanDate.Value.ToShortDateString(),
-                customername = challan.CustomerName,
-                netamount = challan.NetAmount,
-                cgstamount = challan.CGSTAmount,
-                sgstamount = challan.SGSTAmount,
-                igstamount = challan.IGSTAmount,
-                gstamount = challan.GSTAmount,
-                totalamount = challan.TotalAmount
-            });
-
-            var response = new
-            {
-                draw = draw,
-                recordsTotal = totalRecords,
-                recordsFiltered = filteredRecords,
-                data = jsonData
-            };
-
-            return Json(response);
-        }
-        */
 
         // GET: ChallanController/Detail/5
         [Route("Detail/{id}")]
@@ -387,27 +325,9 @@ namespace BS.UI.Web.Controllers
 
         }
 
-        private void BindDropDowns(ARSharedListsVM data)
-        {
-            ViewBag.Customers = data.Customers
-            .Select(s => new SelectListItem()
-            {
-                Text = $"{s.Code} - {s.Title}",
-                Value = s.CustomerID.ToString(),
-            }).ToList();
-
-
-            ViewBag.Products = data.Items
-            .Select(s => new SelectListItem()
-            {
-                Text = $"{s.HSNNo} - {s.ItemName}",
-                Value = s.ItemID.ToString(),
-            }).ToList();
-
-
-        }
         #endregion
-
     }
+
+
 
 }
