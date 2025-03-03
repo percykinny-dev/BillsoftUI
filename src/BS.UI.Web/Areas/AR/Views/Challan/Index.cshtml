@@ -1,6 +1,4 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model BS.Application.ViewModels.AR.ARChallanDetailVM
-@{
+﻿@{
     Dictionary<string, string> data = ViewBag.Resources;
     //var pageTitle = data[ResourceKeyEnum.AR_CUSTOMER_INDEX_PAGETITLE.ToString()];
     //ViewBag.Title = pageTitle;
@@ -74,56 +72,55 @@
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-sm-6">
-                                <label for="CustomerID" class="form-label">Customer Name</label>
-                                <select class="form-control" data-trigger name="CustomerID" id="CustomerID" asp-items="@ViewBag.Customers as List<SelectListItem>">
-                                    <option value="">Select Customer</option>
-                                </select>
-                                @*<input type="text" class="form-control" id="billContactName" name="billContactName" placeholder="Contact Name"> *@
+                                <label for="billContactName" class="form-label">Contact Name</label>
+                                <input type="text" class="form-control" id="billContactName" name="billContactName" placeholder="Contact Name">
                             </div>
                             <div class="col-sm-6">
-                                <label for="ChallanNo" class="form-label">Challan No.</label>
-                                <input type="text" class="form-control" id="ChallanNo" name="ChallanNo" placeholder="Challan No." value="">
+                                <label for="billAddress1" class="form-label">Address Line #1</label>
+                                <input type="text" class="form-control" id="billAddress1" name="billAddress1" placeholder="Address Line #1">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-6">
-                                <label for="Challanfromdate" class="form-label">Challan From Date</label>
-                                <input type="text" class="form-control form-control-light" id="Challanfromdate" name="Challanfromdate" placeholder="Choose date">
+                                <label for="billAddress2" class="form-label">Address Line #2</label>
+                                <input type="text" class="form-control" id="billAddress2" name="billAddress2" placeholder="Address Line #2">
                             </div>
                             <div class="col-sm-6">
-                                <label for="Challantodate" class="form-label">Challan To Date</label>
-                                <input type="text" class="form-control form-control-light" id="Challantodate" name="Challantodate" placeholder="Choose date">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-6">
-                                <label for="Challanfromamt" class="form-label">Challan From Amt</label>
-                                <input class="form-control form-control-sm form-control-light" id="Challanfromamt" name="Challanfromamt" type="number" min="0" value="">
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="Challantoamt" class="form-label">Challan To Amt</label>
-                                <input class="form-control form-control-sm form-control-light" id="Challantoamt" name="Challantoamt" type="number" min="0" value="">
+                                <label for="billCity" class="form-label">City</label>
+                                <input type="text" class="form-control" id="billCity" name="billCity" placeholder="City">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-6">
-                                <label for="itemId1" class="form-label">Product Name</label>
-                                @* <select class="form-control" name="itemId1" id="itemId1" asp-items="@ViewBag.Products as List<SelectListItem>">
-                                    <option value="0">Select Product</option>
-                                </select> *@
-                                <select class="form-control" data-trigger name="itemId1" id="itemId1" asp-items="@ViewBag.Products as List<SelectListItem>">
-                                    <option value="">Select Product</option>
+                                <label for="billState" class="form-label">Bill State</label>
+                                <select class="form-control" data-trigger name="billState" id="billState" single>
+                                    <option value="">Select</option>
+                                    <option value="AP">Andhra Pradesh</option>
+                                    <option value="BR">Bihar</option>
+                                    <option value="MP">Madhya Pradesh</option>
+                                    <option value="MH">Maharashtra</option>
+                                    <option value="MN">Manipur</option>
                                 </select>
                             </div>
                             <div class="col-sm-6">
-                                @* <label for="billWhatsappPhone" class="form-label">WhatsApp Phone</label>
-                                <input type="tel" class="form-control" id="billWhatsappPhone" name="billWhatsappPhone" placeholder="+123-456-7890"> *@
+                                <label for="billZipcode" class="form-label">ZipCode</label>
+                                <input type="text" class="form-control" id="billZipcode" name="billZipcode" placeholder="ZipCode">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <label for="billWorkPhone" class="form-label">Work Phone</label>
+                                <input type="tel" class="form-control" id="billWorkPhone" name="billWorkPhone" placeholder="+123-456-7890">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="billWhatsappPhone" class="form-label">WhatsApp Phone</label>
+                                <input type="tel" class="form-control" id="billWhatsappPhone" name="billWhatsappPhone" placeholder="+123-456-7890">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button id="searchchallan" class="btn btn-primary" type="button">
+                    <button id="ember3334" class="btn btn-primary" type="submit">
                         <!----> Search
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
@@ -157,13 +154,9 @@
         margin-right: 10px; /* Adjust the margin as needed */
     }
 
-    .flatpickr-calendar {
-        z-index: 9999 !important;
-    }
-
 </style>
 
 @section Scripts {
     <script src="~/bs/js/ar_challanlist.js" asp-append-version="true"></script>
-
+    
 }
